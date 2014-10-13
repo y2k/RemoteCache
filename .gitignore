@@ -1,0 +1,7 @@
+packages/
+RemoteCacheApi/bin/
+RemoteCacheApi/obj/
+RemoteCacheDownloader/obj/
+RemoteCacheDownloader/bin/
+RemoteCache.sln.ide/
+*.user

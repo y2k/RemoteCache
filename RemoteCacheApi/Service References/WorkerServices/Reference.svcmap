@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="6a86b585-a521-4329-ac79-d8b9da003d3e" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8191/remote-cache" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="WorkerService.wsdl" MetadataType="Wsdl" ID="bb85d470-ff30-4c95-b05c-a5198e73453e" SourceId="1" SourceUrl="http://localhost:8191/remote-cache?wsdl" />
+    <MetadataFile FileName="remote-cache.disco" MetadataType="Disco" ID="d3785555-5b41-4b0c-9423-d5457850af8e" SourceId="1" SourceUrl="http://localhost:8191/remote-cache?disco" />
+    <MetadataFile FileName="remote-cache.xsd" MetadataType="Schema" ID="049f5c75-4f96-47a9-877a-22b1f247f033" SourceId="1" SourceUrl="http://localhost:8191/remote-cache?xsd=xsd0" />
+    <MetadataFile FileName="remote-cache1.xsd" MetadataType="Schema" ID="b4ff4621-9293-488e-b397-4a9eb182ecd2" SourceId="1" SourceUrl="http://localhost:8191/remote-cache?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
