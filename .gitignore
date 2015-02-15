@@ -5,3 +5,5 @@ RemoteCacheDownloader/obj/
 RemoteCacheDownloader/bin/
 RemoteCache.sln.ide/
 *.user
+RemoteCacheApiService/bin/
+RemoteCacheApiService/obj/
