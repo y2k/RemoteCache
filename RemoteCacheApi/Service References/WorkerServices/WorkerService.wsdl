@@ -12,16 +12,35 @@
   <wsdl:message name="IWorkerService_AddWork_OutputMessage">
     <wsdl:part name="parameters" element="tns:AddWorkResponse" />
   </wsdl:message>
+  <wsdl:message name="IWorkerService_GetPathForImage_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPathForImage" />
+  </wsdl:message>
+  <wsdl:message name="IWorkerService_GetPathForImage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPathForImageResponse" />
+  </wsdl:message>
   <wsdl:portType name="IWorkerService">
     <wsdl:operation name="AddWork">
       <wsdl:input wsam:Action="http://tempuri.org/IWorkerService/AddWork" message="tns:IWorkerService_AddWork_InputMessage" />
       <wsdl:output wsam:Action="http://tempuri.org/IWorkerService/AddWorkResponse" message="tns:IWorkerService_AddWork_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPathForImage">
+      <wsdl:input wsam:Action="http://tempuri.org/IWorkerService/GetPathForImage" message="tns:IWorkerService_GetPathForImage_InputMessage" />
+      <wsdl:output wsam:Action="http://tempuri.org/IWorkerService/GetPathForImageResponse" message="tns:IWorkerService_GetPathForImage_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IWorkerService" type="tns:IWorkerService">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="AddWork">
       <soap:operation soapAction="http://tempuri.org/IWorkerService/AddWork" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPathForImage">
+      <soap:operation soapAction="http://tempuri.org/IWorkerService/GetPathForImage" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

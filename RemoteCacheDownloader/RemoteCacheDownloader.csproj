@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Model\ClearWorker.cs" />
     <Compile Include="Model\DownloadWorker.cs" />
+    <Compile Include="Model\ImageStorage.cs" />
     <Compile Include="Model\WorkerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -35,18 +35,11 @@ namespace RemoteCacheDownloader.Model
 
         public void Start()
         {
-            var cacheRoot = Path.Combine(Directory.GetCurrentDirectory(), "Cache");
-            Directory.CreateDirectory(cacheRoot);
+            var storage = new ImageStorage();
+            storage.Initialize();
 
-            Log.Trace("START clear temp files");
-            foreach (var f in Directory.GetFiles(cacheRoot, "*.tmp"))
-            {
-                File.Delete(f);
-            }
-            Log.Trace("END clear temp files");
-
-            new ClearWorker(cacheRoot, MaxCacheSize).Start();
-            for (int i = 0; i < MaxThreads; i++) new DownloadWorker(cacheRoot).Start();
+            new ClearWorker(storage, MaxCacheSize).Start();
+            for (int i = 0; i < MaxThreads; i++) new DownloadWorker(storage).Start();
         }
 
         public void AddWork(Uri source)

@@ -1,5 +1,4 @@
-﻿using RemoteCacheApi.Properties;
-using RemoteCacheApi.WorkerServices;
+﻿using RemoteCacheApi.WorkerServices;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -14,14 +13,17 @@ namespace RemoteCacheApi.Models
     {
         public string Get(string url)
         {
-            var path = Path.Combine(Settings.Default.CacheRoot, CalculateMD5Hash("" + new Uri(url)));
-            if (File.Exists(path)) return path;
-
             using (var client = new WorkerServiceClient())
             {
-                client.AddWork(new Uri(url));
+                try
+                {
+                    return client.GetPathForImage(new Uri(url));
+                }
+                catch
+                {
+                    client.AddWork(new Uri(url));
+                }
             }
-
             return null;
         }
 

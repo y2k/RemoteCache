@@ -1,22 +1,19 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace RemoteCacheDownloader.Model
 {
     class DownloadWorker
     {
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private string cacheRoot;
+        private ImageStorage cacheRoot;
 
-        public DownloadWorker(string cacheRoot)
+        public DownloadWorker(ImageStorage cacheRoot)
         {
             this.cacheRoot = cacheRoot;
         }
@@ -66,12 +63,12 @@ namespace RemoteCacheDownloader.Model
             return WorkerManager.Instance.RegisterNewWork();
         }
 
-        private static void DownloadToFile(Uri url, string cacheRoot)
+        private static void DownloadToFile(Uri url, ImageStorage cacheRoot)
         {
-            var target = Path.Combine(cacheRoot, CalculateMD5Hash("" + url));
+            var target = cacheRoot.GetPathForImage(url);
             if (File.Exists(target)) return;
 
-            var tmp = Path.Combine(cacheRoot, Guid.NewGuid() + ".tmp");
+            var tmp = cacheRoot.CreateTempFileInCacheDirectory();
             Log.Trace("Download url {0} -> {1}", url, tmp);
 
             var req = (HttpWebRequest)WebRequest.Create(url);
@@ -99,21 +96,6 @@ namespace RemoteCacheDownloader.Model
             File.Move(tmp, target);
         }
 
-        private static string CalculateMD5Hash(string input)
-        {
-            // step 1, calculate MD5 hash from input
-            MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(input);
-            byte[] hash = md5.ComputeHash(inputBytes);
-
-            // step 2, convert byte array to hex string
-            var sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
-            {
-                sb.Append(hash[i].ToString("X2"));
-            }
-            return sb.ToString();
-        }
 
         private static void CompleteTask(Uri url)
         {
