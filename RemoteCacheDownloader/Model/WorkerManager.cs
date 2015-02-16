@@ -2,12 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace RemoteCacheDownloader.Model
 {
@@ -47,6 +41,14 @@ namespace RemoteCacheDownloader.Model
             lock (this)
             {
                 DownloadUrls.Push(source);
+            }
+        }
+
+        internal string GetPathForImage(Uri source)
+        {
+            lock (this)
+            {
+                throw new NotImplementedException();
             }
         }
 

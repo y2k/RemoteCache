@@ -7,3 +7,4 @@ RemoteCache.sln.ide/
 *.user
 RemoteCacheApiService/bin/
 RemoteCacheApiService/obj/
+.vs/
