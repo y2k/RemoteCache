@@ -8,3 +8,5 @@ RemoteCache.sln.ide/
 RemoteCacheApiService/bin/
 RemoteCacheApiService/obj/
 .vs/
+RemoteCacheService/obj/
+RemoteCacheService/bin/

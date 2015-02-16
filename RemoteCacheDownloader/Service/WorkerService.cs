@@ -1,16 +1,13 @@
-﻿using NLog;
-using RemoteCacheDownloader.Model;
+﻿using RemoteCacheDownloader.Model;
 using RemoteCacheDownloader.Service;
 using System;
 using System.IO;
-using System.ServiceModel;
-using System.ServiceModel.Description;
 
 namespace RemoteCacheDownloader
 {
     public class WorkerService : IWorkerService
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         #region IWorkerService Members
 
@@ -23,7 +20,7 @@ namespace RemoteCacheDownloader
         public string GetPathForImage(Uri url)
         {
             var file = new ImageStorage().GetPathForImage(url);
-            if (File.Exists(file)) throw new Exception();
+            if (!File.Exists(file)) throw new Exception();
             return file;
         }
 
@@ -35,7 +32,7 @@ namespace RemoteCacheDownloader
             ServiceHost host = new ServiceHost(typeof(WorkerService), baseAddress);
             ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
             smb.HttpGetEnabled = true;
-            smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
+            //smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
             host.Description.Behaviors.Add(smb);
 
             host.Open();

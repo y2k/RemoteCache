@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
+# Visual Studio 2012
 VisualStudioVersion = 14.0.22512.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B2E50A46-9E64-4064-8D0B-640D7EB42CB0}"
@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteCacheDownloader", "Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteCacheApi", "RemoteCacheApi\RemoteCacheApi.csproj", "{F1D4910D-27DC-4757-854D-42A643F0B9DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteCacheService", "RemoteCacheService\RemoteCacheService.csproj", "{B6D9DB1D-2B2D-42A6-8933-244538E69BFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,10 +26,16 @@ Global
 		{948A7EE5-BF8C-4428-841D-6BA8687CADE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{948A7EE5-BF8C-4428-841D-6BA8687CADE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{948A7EE5-BF8C-4428-841D-6BA8687CADE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6D9DB1D-2B2D-42A6-8933-244538E69BFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6D9DB1D-2B2D-42A6-8933-244538E69BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6D9DB1D-2B2D-42A6-8933-244538E69BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6D9DB1D-2B2D-42A6-8933-244538E69BFF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F1D4910D-27DC-4757-854D-42A643F0B9DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F1D4910D-27DC-4757-854D-42A643F0B9DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1D4910D-27DC-4757-854D-42A643F0B9DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1D4910D-27DC-4757-854D-42A643F0B9DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

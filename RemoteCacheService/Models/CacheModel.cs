@@ -1,17 +1,17 @@
-﻿using RemoteCacheApi.WorkerServices;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 
-namespace RemoteCacheApi.Models
+namespace RemoteCacheService.Models
 {
     public class CacheModel
     {
         public string Get(string url)
         {
-            using (var client = new WorkerServiceClient())
+			using (var client = new WorkerServiceClient(new BasicHttpBinding(), new EndpointAddress("http://localhost:8191/remote-cache")))
             {
                 try
                 {
