@@ -2,11 +2,8 @@
 using RemoteCacheDownloader.Model;
 using RemoteCacheDownloader.Service;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Description;
-using System.Text;
 
 namespace RemoteCacheDownloader
 {
@@ -20,6 +17,11 @@ namespace RemoteCacheDownloader
         {
             Log.Trace("Get new work {0}" + source);
             WorkerManager.Instance.AddWork(source);
+        }
+
+        public string GetPathForImage(Uri source)
+        {
+            return WorkerManager.Instance.GetPathForImage(source);
         }
 
         #endregion
