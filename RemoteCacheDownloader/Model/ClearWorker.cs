@@ -1,5 +1,4 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -8,12 +7,11 @@ namespace RemoteCacheDownloader.Model
 {
     class ClearWorker
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        private static readonly TimeSpan SleepTime = new TimeSpan(0, 20, 0); // 20 minutes
+        static readonly TimeSpan SleepTime = new TimeSpan(0, 20, 0); // 20 minutes
 
-        private ImageStorage cacheRoot;
-        private long maxCacheSize;
-        private const float trimFactor = 0.8f; // Коэф. размера кэша до которого он уменьшается при привышение лимита.
+        ImageStorage cacheRoot;
+        long maxCacheSize;
+        const float trimFactor = 0.8f; // Коэф. размера кэша до которого он уменьшается при привышение лимита.
 
         public ClearWorker(ImageStorage cacheRoot, long maxCacheSize)
         {
@@ -31,7 +29,7 @@ namespace RemoteCacheDownloader.Model
                 }
                 catch (Exception e)
                 {
-                    Log.ErrorException(e.Message, e);
+                    Console.WriteLine(e);
                 }
 
                 Thread.Sleep(SleepTime);
@@ -40,13 +38,13 @@ namespace RemoteCacheDownloader.Model
 
         private void Execute()
         {
-            Log.Debug("Start clear");
+            Console.WriteLine("Start clear");
             var files = Directory.EnumerateFiles(cacheRoot.GetRootDirectory())
                 .Where(s => !s.EndsWith("*.tmp"))
                 .Select(s => new FileInfo(s))
                 .OrderByDescending(s => s.LastWriteTime)
                 .ToList();
-            Log.Debug("Get all files, count = {0}", files.Count);
+            Console.WriteLine("Get all files, count = {0}", files.Count);
 
             if (files.Sum(s => s.Length) <= maxCacheSize) return; // Если кэш меньши лимита, то выходим
 
@@ -62,12 +60,12 @@ namespace RemoteCacheDownloader.Model
                     }
                     catch (Exception e)
                     {
-                        Log.ErrorException("Error while delete file " + f.FullName, e);
+                        Console.WriteLine("Error while delete file " + f.FullName + "\n" + e);
                     }
                 }
             }
 
-            Log.Debug("End delete file");
+            Console.WriteLine("End delete file");
         }
     }
 }

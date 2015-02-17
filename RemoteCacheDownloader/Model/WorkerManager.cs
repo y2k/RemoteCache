@@ -1,14 +1,10 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace RemoteCacheDownloader.Model
 {
     class WorkerManager
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         private static readonly TimeSpan WaitPeriod = new TimeSpan(0, 0, 1);
 
         private const int ImagePerChunk = 100;

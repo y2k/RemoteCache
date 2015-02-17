@@ -1,5 +1,4 @@
-﻿using NLog;
-using RemoteCacheDownloader.Model;
+﻿using RemoteCacheDownloader.Model;
 using System;
 using System.Collections.Generic;
 
@@ -7,8 +6,6 @@ namespace RemoteCacheDownloader
 {
     class Program
     {
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-
         private static readonly TimeSpan WaitPeriod = new TimeSpan(0, 0, 1);
 
         private const int ImagePerChunk = 100;
@@ -18,13 +15,13 @@ namespace RemoteCacheDownloader
 
         static void Main(string[] args)
         {
-            Log.Debug("Program start");
+            Console.WriteLine("Program start");
 
             WorkerService.InitializeService();
-            Log.Debug("Initialize service complete");
+            Console.WriteLine("Initialize service complete");
 
             WorkerManager.Instance.Start();
-            Log.Debug("Initialize downloaders complete");
+            Console.WriteLine("Initialize downloaders complete");
 
             Console.ReadLine();
         }

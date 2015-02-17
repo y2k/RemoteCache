@@ -1,5 +1,4 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,8 +7,6 @@ namespace RemoteCacheDownloader.Model
 {
     class ImageStorage
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         string cacheRoot = Path.Combine(Directory.GetCurrentDirectory(), "Cache");
 
         internal string GetPathForImage(Uri url)
@@ -21,10 +18,10 @@ namespace RemoteCacheDownloader.Model
         {
             Directory.CreateDirectory(cacheRoot);
 
-            Log.Trace("START clear temp files");
+            Console.WriteLine("START clear temp files");
             foreach (var f in Directory.GetFiles(cacheRoot, "*.tmp"))
                 File.Delete(f);
-            Log.Trace("END clear temp files");
+            Console.WriteLine("END clear temp files");
         }
 
         internal string GetRootDirectory()

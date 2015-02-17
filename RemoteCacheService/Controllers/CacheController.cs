@@ -8,13 +8,25 @@ namespace RemoteCacheService.Controllers
 {
     public class CacheController : Controller
     {
-        private CacheModel model = new CacheModel();
+        CacheModel model = new CacheModel();
 
-        public ActionResult Get(string url, string format, int? size = null, int? width = null, int? maxHeight = null)
+        // TODO: убрать костыль когда починят mono asp net
+        public ActionResult Get() {
+            return InnerGet(
+                Request["url"],
+                Request["format"],
+                Request.AsInt("size"),
+                Request.AsInt("width"),
+                Request.AsInt("maxHeight"));
+        }
+
+        ActionResult InnerGet(string url, string format, int? size = null, int? width = null, int? maxHeight = null)
         {
             Uri tmp;
-            if (!Uri.TryCreate(url, UriKind.Absolute, out tmp)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            if (size.HasValue && (size < 16 || size > 512)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (size.HasValue && (size < 16 || size > 512))
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             if (size.HasValue)
             {

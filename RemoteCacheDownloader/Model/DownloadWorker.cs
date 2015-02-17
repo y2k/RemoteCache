@@ -1,17 +1,13 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 
 namespace RemoteCacheDownloader.Model
 {
     class DownloadWorker
     {
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-        private ImageStorage cacheRoot;
+        ImageStorage cacheRoot;
 
         public DownloadWorker(ImageStorage cacheRoot)
         {
@@ -21,26 +17,27 @@ namespace RemoteCacheDownloader.Model
         public void Start()
         {
             new Thread(() =>
-            {
-                while (true)
                 {
-                    try
+                    while (true)
                     {
-                        Execute();
+                        try
+                        {
+                            Execute();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message + "\n" + e);
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        Log.ErrorException(e.Message, e);
-                    }
-                }
-            }).Start();
+                }).Start();
         }
 
-        private void Execute()
+        void Execute()
         {
             var url = CreateTask();
 
-            if (url == null) Thread.Sleep(1000);
+            if (url == null)
+                Thread.Sleep(1000);
             else
             {
                 try
@@ -49,7 +46,7 @@ namespace RemoteCacheDownloader.Model
                 }
                 catch (Exception e)
                 {
-                    Log.WarnException("Can't download " + url, e);
+                    Console.WriteLine("Can't download " + url + "\n" + e);
                 }
                 finally
                 {
@@ -58,18 +55,19 @@ namespace RemoteCacheDownloader.Model
             }
         }
 
-        private static Uri CreateTask()
+        static Uri CreateTask()
         {
             return WorkerManager.Instance.RegisterNewWork();
         }
 
-        private static void DownloadToFile(Uri url, ImageStorage cacheRoot)
+        static void DownloadToFile(Uri url, ImageStorage cacheRoot)
         {
             var target = cacheRoot.GetPathForImage(url);
-            if (File.Exists(target)) return;
+            if (File.Exists(target))
+                return;
 
             var tmp = cacheRoot.CreateTempFileInCacheDirectory();
-            Log.Trace("Download url {0} -> {1}", url, tmp);
+            Console.WriteLine("Download url {0} -> {1}", url, tmp);
 
             var req = (HttpWebRequest)WebRequest.Create(url);
             req.Referer = url.AbsoluteUri;
@@ -97,7 +95,7 @@ namespace RemoteCacheDownloader.Model
         }
 
 
-        private static void CompleteTask(Uri url)
+        static void CompleteTask(Uri url)
         {
             WorkerManager.Instance.UnregisterWork(url);
         }
