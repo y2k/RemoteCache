@@ -11,3 +11,5 @@ RemoteCacheApiService/obj/
 RemoteCacheService/obj/
 RemoteCacheService/bin/
 Backup1/
+RemoteCacheApi/node_modules/
+artifacts/

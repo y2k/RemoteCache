@@ -1,20 +1,21 @@
-﻿using RemoteCacheApi.Models;
-using System;
+﻿using System;
 using System.Net;
-using System.Web;
-using System.Web.Mvc;
+using Microsoft.AspNet.Mvc;
+using RemoteCacheApi.Models;
 
 namespace RemoteCacheApi.Controllers
 {
     public class CacheController : Controller
     {
-        private CacheModel model = new CacheModel();
+        CacheModel model = new CacheModel();
 
         public ActionResult Get(string url, string format, int? size = null, int? width = null, int? maxHeight = null)
         {
             Uri tmp;
-            if (!Uri.TryCreate(url, UriKind.Absolute, out tmp)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            if (size.HasValue && (size < 16 || size > 512)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
+                return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
+            if (size.HasValue && (size < 16 || size > 512))
+                return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
 
             if (size.HasValue)
             {
@@ -56,8 +57,8 @@ namespace RemoteCacheApi.Controllers
                 }
             }
 
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            //Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
         }
     }
 }
