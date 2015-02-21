@@ -31,6 +31,7 @@ namespace RemoteCacheApi
             // Uncomment the following line to add Web API servcies which makes it easier to port Web API 2 controllers.
             // You need to add Microsoft.AspNet.Mvc.WebApiCompatShim package to project.json
             // services.AddWebApiConventions();
+
         }
 
         // Configure is called after ConfigureServices is called.
@@ -51,7 +52,7 @@ namespace RemoteCacheApi
             }
 
             // Add static files to the request pipeline.
-            //app.UseStaticFiles();
+            app.UseStaticFiles();
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>

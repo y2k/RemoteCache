@@ -1,26 +1,32 @@
 ﻿using System;
 using System.Net;
-using Microsoft.AspNet.Mvc;
-using RemoteCacheApi.Models;
+using System.Web;
+using System.Web.Mvc;
+using RemoteCacheService.Models;
 
-namespace RemoteCacheApi.Controllers
+namespace RemoteCacheService.Controllers
 {
     public class CacheController : Controller
     {
         CacheModel model = new CacheModel();
 
-        public ActionResult Test()
-        {
-            return Content("test");
+        // TODO: убрать костыль когда починят mono asp net
+        public ActionResult Get() {
+            return InnerGet(
+                Request["url"],
+                Request["format"],
+                Request.AsInt("size"),
+                Request.AsInt("width"),
+                Request.AsInt("maxHeight"));
         }
 
-        public ActionResult Get(string url, string format, int? size = null, int? width = null, int? maxHeight = null)
+        ActionResult InnerGet(string url, string format, int? size = null, int? width = null, int? maxHeight = null)
         {
             Uri tmp;
             if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
-                return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             if (size.HasValue && (size < 16 || size > 512))
-                return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             if (size.HasValue)
             {
@@ -58,13 +64,12 @@ namespace RemoteCacheApi.Controllers
                     cache.SetCacheability(HttpCacheability.Public);
                     cache.SetExpires(new DateTime(2525, 1, 1));
 #endif
-                    //return new FilePathResult(path, "image/jpeg");
-                    return new FileStreamResult(System.IO.File.Open(path,System.IO.FileMode.Open), "image/jpeg");
+                    return new FilePathResult(path, "image/jpeg");
                 }
             }
 
-            //Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            return new HttpStatusCodeResult(HttpStatusCode.NotFound);
         }
     }
 }
