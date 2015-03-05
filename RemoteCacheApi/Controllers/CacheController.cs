@@ -32,7 +32,7 @@ namespace RemoteCacheApi.Controllers
                     cache.SetCacheability(HttpCacheability.Public);
                     cache.SetExpires(new DateTime(2525, 1, 1));
 #endif
-                    return new FileContentResult(data, "image/jpeg");
+                    return new FileStreamResult(data, "image/jpeg");
                 }
             }
             else if (width.HasValue && maxHeight.HasValue)

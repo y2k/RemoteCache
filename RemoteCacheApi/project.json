@@ -4,7 +4,7 @@
     "version": "1.0.0-*",
     "dependencies": {
         "Kestrel": "1.0.0-beta3",
-        "ImageResizer": "3.3.3",
+        "ImageResizer": "3.4.3",
 
         "Microsoft.AspNet.Server.WebListener": "1.0.0-beta3",
 
@@ -25,8 +25,7 @@
     "frameworks": {
         "aspnet50": {
             "frameworkAssemblies": {
-                "System.ServiceModel": "4.0.0.0",
-                "System.Drawing": "4.0.0.0"
+                "System.ServiceModel": "4.0.0.0"
             }
         }
     },
