@@ -8,20 +8,23 @@ namespace RemoteCacheService.Controllers
 {
     public class CacheController : Controller
     {
-        CacheModel model = new CacheModel();
-
         // TODO: убрать костыль когда починят mono asp net
         public ActionResult Get() {
             return InnerGet(
                 Request["url"],
                 Request["format"],
+                Request["bgColor"],
                 Request.AsInt("size"),
                 Request.AsInt("width"),
                 Request.AsInt("maxHeight"));
         }
 
-        ActionResult InnerGet(string url, string format, int? size = null, int? width = null, int? maxHeight = null)
+        ActionResult InnerGet(string url, string format, string bgColor, int? size = null, int? width = null, int? maxHeight = null)
         {
+            var cache = new RemoteCache();
+            if (bgColor != null)
+                cache.SetJpegBackground(bgColor);
+
             Uri tmp;
             if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -30,7 +33,7 @@ namespace RemoteCacheService.Controllers
 
             if (size.HasValue)
             {
-                var data = model.Square(url, size.Value, format);
+                var data = cache.Square(url, size.Value, format);
                 if (data != null)
                 {
 #if !DEBUG
@@ -43,7 +46,7 @@ namespace RemoteCacheService.Controllers
             }
             else if (width.HasValue && maxHeight.HasValue)
             {
-                var data = model.Thumbnail(url, width.Value, maxHeight.Value, format);
+                var data = cache.Thumbnail(url, width.Value, maxHeight.Value, format);
                 if (data != null)
                 {
 #if !DEBUG
@@ -56,7 +59,7 @@ namespace RemoteCacheService.Controllers
             }
             else
             {
-                var path = model.Get(url);
+                var path = cache.Get(url);
                 if (path != null)
                 {
 #if !DEBUG

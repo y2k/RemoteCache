@@ -1,18 +1,25 @@
-﻿using System;
+﻿using RemoteCacheDownloader.Service;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
-using RemoteCacheDownloader.Service;
 
 namespace RemoteCacheService.Models
 {
-    public class CacheModel
+    class RemoteCache
     {
+        Brush background;
+
+        internal void SetJpegBackground(string hexColor)
+        {
+            var color = Convert.ToInt32(hexColor, 16);
+            background = new SolidBrush(Color.FromArgb(0xFF, Color.FromArgb(color)));
+        }
+
         public string Get(string url)
         {
-//            var factory = new ChannelFactory<IWorkerService>(new NetTcpBinding(), new EndpointAddress("net.tcp://localhost:8192/remote-cache"));
             var factory = new ChannelFactory<IWorkerService>(new BasicHttpBinding(), new EndpointAddress("http://localhost:8192/remote-cache"));
             var client = factory.CreateChannel();
             try
@@ -30,11 +37,12 @@ namespace RemoteCacheService.Models
 
         public byte[] Square(string url, int size, string format)
         {
-            return CreateThumbnail(url, format, image =>
+            return CreateThumbnail(url, format,
+                image =>
                 {
                     int w = Math.Min(size, Math.Min(image.Width, image.Height));
                     var thumb = new Bitmap(w, w);
-                    using (var g = Graphics.FromImage(thumb))
+                    using (var g = NewGraphics(thumb))
                     {
                         float s = (float)w / Math.Min(image.Width, image.Height);
                         g.DrawImage(image, (w - image.Width * s) / 2, (w - image.Height * s) / 2, image.Width * s, image.Height * s);
@@ -48,11 +56,12 @@ namespace RemoteCacheService.Models
             width = Math.Max(16, Math.Min(1000, width));
             maxHeight = Math.Max(16, Math.Min(1000, maxHeight));
 
-            return CreateThumbnail(url, format, image =>
+            return CreateThumbnail(url, format,
+                image =>
                 {
                     int h = (int)Math.Min(maxHeight, ((float)width / image.Width) * image.Height);
                     var thumb = new Bitmap(width, h);
-                    using (var g = Graphics.FromImage(thumb))
+                    using (var g = NewGraphics(thumb))
                     {
                         float s = (float)image.Height / image.Width;
                         g.DrawImage(image, 0, -(thumb.Width * s - thumb.Height) / 2, thumb.Width, thumb.Width * s);
@@ -61,7 +70,7 @@ namespace RemoteCacheService.Models
                 });
         }
 
-        byte[] CreateThumbnail(String url, String format, Func<Image, Bitmap> resizeCallback)
+        byte[] CreateThumbnail(string url, string format, Func<Image, Bitmap> resizeCallback)
         {
             var src = Get(url);
             if (src == null)
@@ -69,14 +78,14 @@ namespace RemoteCacheService.Models
 
             Image thumb;
             ImageFormat f;
-            using (var image = Bitmap.FromFile(src))
+            using (var image = Image.FromFile(src))
             {
                 f = image.RawFormat;
                 thumb = resizeCallback(image);
             }
 
             // Принудительно конвертируем в jpeg
-            if (format == "jpeg")
+            if (format == "jpeg" || background != null)
                 f = ImageFormat.Jpeg;
 
             using (var s = new MemoryStream())
@@ -89,10 +98,19 @@ namespace RemoteCacheService.Models
                     thumb.Save(s, enc, p);
                 }
                 else
+                {
                     thumb.Save(s, f);
-
+                }
                 return s.ToArray();
             }
+        }
+
+        Graphics NewGraphics(Bitmap thumb)
+        {
+            var canvas = Graphics.FromImage(thumb);
+            if (background != null)
+                canvas.FillRectangle(background, 0, 0, thumb.Width, thumb.Height);
+            return canvas;
         }
     }
 }
