@@ -21,9 +21,9 @@ namespace RemoteCacheService.Controllers
 
         ActionResult InnerGet(string url, string format, string bgColor, int? size = null, int? width = null, int? maxHeight = null)
         {
-            var cache = new RemoteCache();
+            var imageRepository = new RemoteCache();
             if (bgColor != null)
-                cache.SetJpegBackground(bgColor);
+                imageRepository.SetJpegBackground(bgColor);
 
             Uri tmp;
             if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
@@ -33,7 +33,7 @@ namespace RemoteCacheService.Controllers
 
             if (size.HasValue)
             {
-                var data = cache.Square(url, size.Value, format);
+                var data = imageRepository.Square(url, size.Value, format);
                 if (data != null)
                 {
 #if !DEBUG
@@ -46,7 +46,7 @@ namespace RemoteCacheService.Controllers
             }
             else if (width.HasValue && maxHeight.HasValue)
             {
-                var data = cache.Thumbnail(url, width.Value, maxHeight.Value, format);
+                var data = imageRepository.Thumbnail(url, width.Value, maxHeight.Value, format);
                 if (data != null)
                 {
 #if !DEBUG
@@ -59,7 +59,7 @@ namespace RemoteCacheService.Controllers
             }
             else
             {
-                var path = cache.Get(url);
+                var path = imageRepository.Get(url);
                 if (path != null)
                 {
 #if !DEBUG
