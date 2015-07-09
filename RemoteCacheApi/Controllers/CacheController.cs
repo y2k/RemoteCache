@@ -58,7 +58,7 @@ namespace RemoteCacheApi.Controllers
                     cache.SetCacheability(HttpCacheability.Public);
                     cache.SetExpires(new DateTime(2525, 1, 1));
 #endif
-                    //return new FilePathResult(path, "image/jpeg");
+                    //  return new FilePathResult(path, "image/jpeg");
                     return new FileStreamResult(System.IO.File.Open(path,System.IO.FileMode.Open), "image/jpeg");
                 }
             }

@@ -12,13 +12,13 @@ namespace RemoteCacheApi
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
-        {
-            // Setup configuration sources.
-            Configuration = new Configuration()
-                .AddJsonFile("config.json")
-                .AddEnvironmentVariables();
-        }
+        //  public Startup(IHostingEnvironment env)
+        //  {
+        //      // Setup configuration sources.
+        //      Configuration = new Configuration()
+        //          .AddJsonFile("config.json")
+        //          .AddEnvironmentVariables();
+        //  }
 
         public IConfiguration Configuration { get; set; }
 
@@ -40,7 +40,7 @@ namespace RemoteCacheApi
             if (string.Equals(env.EnvironmentName, "Development", StringComparison.OrdinalIgnoreCase))
             {
                 //app.UseBrowserLink();
-                app.UseErrorPage(ErrorPageOptions.ShowAll);
+                app.UseErrorPage();
                 app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
             }
             else
