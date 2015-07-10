@@ -9,7 +9,8 @@ namespace RemoteCacheService.Controllers
     public class CacheController : Controller
     {
         // TODO: убрать костыль когда починят mono asp net
-        public ActionResult Get() {
+        public ActionResult Get()
+        {
             return InnerGet(
                 Request["url"],
                 Request["format"],
@@ -36,11 +37,7 @@ namespace RemoteCacheService.Controllers
                 var data = imageRepository.Square(url, size.Value, format);
                 if (data != null)
                 {
-#if !DEBUG
-                    var cache = Response.Cache;
-                    cache.SetCacheability(HttpCacheability.Public);
-                    cache.SetExpires(new DateTime(2525, 1, 1));
-#endif
+                    ConfigureCache();
                     return new FileContentResult(data, "image/jpeg");
                 }
             }
@@ -49,11 +46,7 @@ namespace RemoteCacheService.Controllers
                 var data = imageRepository.Thumbnail(url, width.Value, maxHeight.Value, format);
                 if (data != null)
                 {
-#if !DEBUG
-                    var cache = Response.Cache;
-                    cache.SetCacheability(HttpCacheability.Public);
-                    cache.SetExpires(new DateTime(2525, 1, 1));
-#endif
+                    ConfigureCache();
                     return new FileContentResult(data, "image/jpeg");
                 }
             }
@@ -62,17 +55,22 @@ namespace RemoteCacheService.Controllers
                 var path = imageRepository.Get(url);
                 if (path != null)
                 {
-#if !DEBUG
-                    var cache = Response.Cache;
-                    cache.SetCacheability(HttpCacheability.Public);
-                    cache.SetExpires(new DateTime(2525, 1, 1));
-#endif
+                    ConfigureCache();
                     return new FilePathResult(path, "image/jpeg");
                 }
             }
 
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+        }
+
+        void ConfigureCache()
+        {
+            #if !DEBUG
+            var cache = Response.Cache;
+            cache.SetCacheability(HttpCacheability.Public);
+            cache.SetExpires(new DateTime(2525, 1, 1));
+            #endif
         }
     }
 }
