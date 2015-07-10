@@ -15,3 +15,4 @@ Backup1/
 RemoteCacheApi/node_modules/
 artifacts/
 nohup.out
+*.userprefs
