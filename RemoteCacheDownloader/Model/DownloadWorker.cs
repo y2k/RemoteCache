@@ -87,7 +87,7 @@ namespace RemoteCacheDownloader.Model
 
         void ConvertToMp4(string tmp, Uri url)
         {
-            const string args = "-i {0} -vcodec libx264 -profile:v high -level 4.0 -b 800k -vf \"scale=trunc(iw/2)*2:trunc(ih/2)*2\" -pix_fmt yuv420p {1}";
+            const string args = "-i {0} -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" {1}";
             var mp4Temp = cacheRoot.CreateTempFileInCacheDirectory() + ".mp4";
 
             Process.Start(
