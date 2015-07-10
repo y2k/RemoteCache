@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ServiceModel;
 
-namespace RemoteCacheDownloader.Service
+namespace RemoteCacheApi.Models
 {
     [ServiceContract]
     public interface IWorkerService

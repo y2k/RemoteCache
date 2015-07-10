@@ -29,7 +29,7 @@ namespace RemoteCacheDownloader.Model
             return cacheRoot;
         }
 
-        private static string CalculateMD5Hash(string input)
+        static string CalculateMD5Hash(string input)
         {
             // step 1, calculate MD5 hash from input
             MD5 md5 = System.Security.Cryptography.MD5.Create();

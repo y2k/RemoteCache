@@ -11,3 +11,7 @@ RemoteCacheApiService/obj/
 RemoteCacheService/obj/
 RemoteCacheService/bin/
 RemoteCacheService/Properties/PublishProfiles/
+Backup1/
+RemoteCacheApi/node_modules/
+artifacts/
+nohup.out

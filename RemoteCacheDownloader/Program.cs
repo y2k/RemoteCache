@@ -1,21 +1,15 @@
-﻿using RemoteCacheDownloader.Model;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using RemoteCacheDownloader.Model;
 
 namespace RemoteCacheDownloader
 {
     class Program
     {
-        private static readonly TimeSpan WaitPeriod = new TimeSpan(0, 0, 1);
-
-        private const int ImagePerChunk = 100;
-        private const int MaxThreads = 20;
-
-        private static readonly HashSet<string> LockedUrls = new HashSet<string>();
-
         static void Main(string[] args)
         {
             Console.WriteLine("Program start");
+
+            DownloadWorker.GetFFFMPEG();
 
             WorkerService.InitializeService();
             Console.WriteLine("Initialize service complete");
