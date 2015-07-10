@@ -1,10 +1,9 @@
 ﻿<Properties StartupItem="RemoteCacheDownloader/RemoteCacheDownloader.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="RemoteCacheDownloader/Model/DownloadWorker.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RemoteCacheService/Controllers/CacheController.cs">
     <Files>
-      <File FileName="RemoteCacheDownloader/Model/WorkerManager.cs" Line="1" Column="1" />
-      <File FileName="RemoteCacheDownloader/Model/DownloadWorker.cs" Line="107" Column="1" />
-      <File FileName="RemoteCacheDownloader/Program.cs" Line="1" Column="1" />
+      <File FileName="RemoteCacheService/Models/RemoteCache.cs" Line="1" Column="37" />
+      <File FileName="RemoteCacheService/Controllers/CacheController.cs" Line="17" Column="25" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -14,6 +13,5 @@
   <DisabledProjects>
     <String>RemoteCacheApi/RemoteCacheApi.csproj</String>
     <String>RemoteCacheApi/RemoteCacheApi.kproj</String>
-    <String>RemoteCacheService/RemoteCacheService.csproj</String>
   </DisabledProjects>
 </Properties>
