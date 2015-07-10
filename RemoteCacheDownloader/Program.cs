@@ -8,8 +8,7 @@ namespace RemoteCacheDownloader
         static void Main(string[] args)
         {
             Console.WriteLine("Program start");
-
-            DownloadWorker.GetFFFMPEG();
+            GifConverter.Instance.ValidateFFMMPEG();
 
             WorkerService.InitializeService();
             Console.WriteLine("Initialize service complete");

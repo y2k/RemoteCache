@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Threading;
-using System.Diagnostics;
 
 namespace RemoteCacheDownloader.Model
 {
@@ -56,15 +55,18 @@ namespace RemoteCacheDownloader.Model
             }
         }
 
-        void Execute(Uri url)
+        void Execute(Uri uri)
         {
-            var target = cacheRoot.GetPathForImage(url);
+            var target = cacheRoot.GetPathForImage(uri);
             if (File.Exists(target))
                 return;
 
-            var tmp = DownloadToTemp(url);
-            if (url.AbsoluteUri.EndsWith(".gif"))
-                ConvertToMp4(tmp, url);
+            var tmp = DownloadToTemp(uri);
+            if (GifConverter.Instance.IsCanConvert(tmp))
+            {
+                var pathToMp4 = cacheRoot.GetPathForImage(ConvertGifUriToMp4(uri));
+                GifConverter.Instance.ConvertToMp4(tmp, pathToMp4);
+            }
 
             File.Move(tmp, target);
         }
@@ -83,29 +85,6 @@ namespace RemoteCacheDownloader.Model
             using (var o = new FileStream(tmp, FileMode.Create))
                 i.CopyTo(o);
             return tmp;
-        }
-
-        void ConvertToMp4(string tmp, Uri url)
-        {
-            const string args = "-i {0} -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" {1}";
-            var mp4Temp = cacheRoot.CreateTempFileInCacheDirectory() + ".mp4";
-
-            Process.Start(
-                new ProcessStartInfo
-                {
-                    FileName = GetFFFMPEG(),
-                    Arguments = string.Format(args, tmp, mp4Temp)
-                }).WaitForExit();
-
-            File.Move(mp4Temp, cacheRoot.GetPathForImage(ConvertGifUriToMp4(url)));
-        }
-
-        public static string GetFFFMPEG()
-        {
-            var path = Environment.GetEnvironmentVariable("REMOTECACHE_FFMPEG_DIR");
-            if (path == null)
-                throw new Exception("Env 'REMOTECACHE_FFMPEG_DIR' not found");
-            return Path.Combine(path, "ffmpeg");
         }
 
         Uri ConvertGifUriToMp4(Uri gifUri)

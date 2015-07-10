@@ -91,6 +91,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ClearWorker.cs" />
@@ -106,6 +107,7 @@
     </Compile>
     <Compile Include="Service\IWorkerService.cs" />
     <Compile Include="Service\WorkerService.cs" />
+    <Compile Include="Model\GifConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
