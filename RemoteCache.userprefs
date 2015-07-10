@@ -2,8 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="RemoteCacheService/Controllers/CacheController.cs">
     <Files>
-      <File FileName="RemoteCacheService/Models/RemoteCache.cs" Line="1" Column="37" />
-      <File FileName="RemoteCacheService/Controllers/CacheController.cs" Line="17" Column="25" />
+      <File FileName="RemoteCacheService/Controllers/CacheController.cs" Line="17" Column="28" />
+      <File FileName="RemoteCacheService/packages.config" Line="6" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
