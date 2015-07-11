@@ -20,10 +20,9 @@ namespace RemoteCacheDownloader
                 return img.RawFormat.Equals(ImageFormat.Gif);
         }
 
-        public void ConvertToMp4(string source, string target)
+        public void ConvertToMp4(string source, string target, string mp4Temp)
         {
-            const string args = "-i {0} -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" {1}";
-            var mp4Temp = target + "-" + Guid.NewGuid() + ".tmp";
+            const string args = "-i {0} -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" -f mp4 {1}";
 
             Process.Start(
                 new ProcessStartInfo

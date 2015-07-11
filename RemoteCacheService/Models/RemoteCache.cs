@@ -1,10 +1,10 @@
-﻿using RemoteCacheDownloader.Service;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
+using RemoteCacheDownloader.Service;
 
 namespace RemoteCacheService.Models
 {
@@ -12,27 +12,15 @@ namespace RemoteCacheService.Models
     {
         Brush background;
 
-        internal void SetJpegBackground(string hexColor)
+        public void SetJpegBackground(string hexColor)
         {
             var color = Convert.ToInt32(hexColor, 16);
             background = new SolidBrush(Color.FromArgb(0xFF, Color.FromArgb(color)));
         }
 
-        public string Get(string url)
+        public string Get(string url, string format)
         {
-            var factory = new ChannelFactory<IWorkerService>(new BasicHttpBinding(), new EndpointAddress("http://localhost:8192/remote-cache"));
-            var client = factory.CreateChannel();
-            try
-            {
-                var file = client.GetPathForImage(new Uri(url));
-                if (file == null) throw new Exception();
-                return file;
-            }
-            catch
-            {
-                client.AddWork(new Uri(url));
-            }
-            return null;
+            return GetImagePathFromRemoteService(url, format);
         }
 
         public byte[] Square(string url, int size, string format)
@@ -72,7 +60,7 @@ namespace RemoteCacheService.Models
 
         byte[] CreateThumbnail(string url, string format, Func<Image, Bitmap> resizeCallback)
         {
-            var src = Get(url);
+            var src = GetImagePathFromRemoteService(url);
             if (src == null)
                 return null;
 
@@ -94,7 +82,7 @@ namespace RemoteCacheService.Models
                 {
                     var enc = ImageCodecInfo.GetImageDecoders().First(i => i.FormatID == ImageFormat.Jpeg.Guid);
                     var p = new EncoderParameters(1);
-                    p.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 90L);
+                    p.Param[0] = new EncoderParameter(Encoder.Quality, 90L);
                     thumb.Save(s, enc, p);
                 }
                 else
@@ -103,6 +91,28 @@ namespace RemoteCacheService.Models
                 }
                 return s.ToArray();
             }
+        }
+
+        string GetImagePathFromRemoteService(string url, string extraLayer = null)
+        {
+            var factory = new ChannelFactory<IWorkerService>(
+                              new BasicHttpBinding(), 
+                              new EndpointAddress("http://localhost:8192/remote-cache"));
+            var client = factory.CreateChannel();
+            try
+            {
+                var file = extraLayer == null
+                    ? client.GetPathForImage(new Uri(url))
+                    : client.GetPathForExtraImage(new Uri(url), extraLayer);
+                if (file == null)
+                    throw new Exception();
+                return file;
+            }
+            catch
+            {
+                client.AddWork(new Uri(url));
+            }
+            return null;
         }
 
         Graphics NewGraphics(Bitmap thumb)

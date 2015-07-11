@@ -64,8 +64,8 @@ namespace RemoteCacheDownloader.Model
             var tmp = DownloadToTemp(uri);
             if (GifConverter.Instance.IsCanConvert(tmp))
             {
-                var pathToMp4 = cacheRoot.GetPathForImage(ConvertGifUriToMp4(uri));
-                GifConverter.Instance.ConvertToMp4(tmp, pathToMp4);
+                var pathToMp4 = cacheRoot.GetPathForImage(uri, "mp4");
+                GifConverter.Instance.ConvertToMp4(tmp, pathToMp4, cacheRoot.CreateTempFileInCacheDirectory());
             }
 
             File.Move(tmp, target);
@@ -85,11 +85,6 @@ namespace RemoteCacheDownloader.Model
             using (var o = new FileStream(tmp, FileMode.Create))
                 i.CopyTo(o);
             return tmp;
-        }
-
-        Uri ConvertGifUriToMp4(Uri gifUri)
-        {
-            return new Uri(gifUri.AbsoluteUri + ".mp4");
         }
 
         void CompleteTask(Uri url)

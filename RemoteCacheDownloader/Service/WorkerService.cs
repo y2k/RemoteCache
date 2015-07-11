@@ -9,8 +9,6 @@ namespace RemoteCacheDownloader
 {
     public class WorkerService : IWorkerService
     {
-        #region IWorkerService Members
-
         public void AddWork(Uri source)
         {
             Console.WriteLine("Get new work {0}" + source);
@@ -19,11 +17,19 @@ namespace RemoteCacheDownloader
 
         public string GetPathForImage(Uri url)
         {
-            var file = new ImageStorage().GetPathForImage(url);
-            return file != null && File.Exists(file) ? file : null;
+            return GetLayer(url, null);
         }
 
-        #endregion
+        public string GetPathForExtraImage(Uri url, string layer)
+        {
+            return GetLayer(url, layer);
+        }
+
+        string GetLayer(Uri url, string layer)
+        {
+            var file = new ImageStorage().GetPathForImage(url, layer);
+            return file != null && File.Exists(file) ? file : null;
+        }
 
         public static void InitializeService()
         {

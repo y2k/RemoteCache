@@ -8,19 +8,19 @@ namespace RemoteCacheService.Controllers
 {
     public class CacheController : Controller
     {
-        // TODO: убрать костыль когда починят mono asp net
-        public ActionResult Get()
-        {
-            return InnerGet(
-                Request["url"],
-                Request["format"],
-                Request["bgColor"],
-                Request.AsInt("size"),
-                Request.AsInt("width"),
-                Request.AsInt("maxHeight"));
-        }
+        //        // TODO: убрать костыль когда починят mono asp net
+        //        public ActionResult Get()
+        //        {
+        //            return InnerGet(
+        //                Request["url"],
+        //                Request["format"],
+        //                Request["bgColor"],
+        //                Request.AsInt("size"),
+        //                Request.AsInt("width"),
+        //                Request.AsInt("maxHeight"));
+        //        }
 
-        ActionResult InnerGet(string url, string format, string bgColor, int? size = null, int? width = null, int? maxHeight = null)
+        public ActionResult Get(string url, string format, string bgColor, int? size = null, int? width = null, int? maxHeight = null)
         {
             var imageRepository = new RemoteCache();
             if (bgColor != null)
@@ -52,11 +52,11 @@ namespace RemoteCacheService.Controllers
             }
             else
             {
-                var path = imageRepository.Get(url);
+                var path = imageRepository.Get(url, format);
                 if (path != null)
                 {
                     ConfigureCache();
-                    return new FilePathResult(path, "image/jpeg");
+                    return new FilePathResult(path, "mp4" == format ? "video/mp4" : "image/jpeg");
                 }
             }
 

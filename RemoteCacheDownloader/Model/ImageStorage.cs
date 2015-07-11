@@ -9,9 +9,15 @@ namespace RemoteCacheDownloader.Model
     {
         string cacheRoot = Path.Combine(Directory.GetCurrentDirectory(), "Cache");
 
-        internal string GetPathForImage(Uri url)
+        internal string GetPathForImage(Uri url, string layer = null)
         {
-            return Path.Combine(cacheRoot, CalculateMD5Hash("" + url));
+            var filename = CreateLayerName(CalculateMD5Hash(url.AbsoluteUri), layer);
+            return Path.Combine(cacheRoot, filename);
+        }
+
+        static string CreateLayerName(string id, string layer)
+        {
+            return id + (layer == null ? "" : "." + layer);
         }
 
         internal void Initialize()
