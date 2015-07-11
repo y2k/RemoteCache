@@ -8,18 +8,6 @@ namespace RemoteCacheService.Controllers
 {
     public class CacheController : Controller
     {
-        //        // TODO: убрать костыль когда починят mono asp net
-        //        public ActionResult Get()
-        //        {
-        //            return InnerGet(
-        //                Request["url"],
-        //                Request["format"],
-        //                Request["bgColor"],
-        //                Request.AsInt("size"),
-        //                Request.AsInt("width"),
-        //                Request.AsInt("maxHeight"));
-        //        }
-
         public ActionResult Get(string url, string format, string bgColor, int? size = null, int? width = null, int? maxHeight = null)
         {
             var imageRepository = new RemoteCache();
