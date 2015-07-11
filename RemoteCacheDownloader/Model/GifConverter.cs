@@ -3,12 +3,17 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading;
 
 namespace RemoteCacheDownloader
 {
     public class GifConverter
     {
         public static readonly GifConverter Instance = new GifConverter();
+
+        const int MaxParallerThread = 2;
+
+        Semaphore locker = new Semaphore(MaxParallerThread, MaxParallerThread);
 
         GifConverter()
         {
@@ -22,16 +27,24 @@ namespace RemoteCacheDownloader
 
         public void ConvertToMp4(string source, string target, string mp4Temp)
         {
-            const string args = "-i {0} -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" -f mp4 {1}";
+            locker.WaitOne();
+            try
+            {
+                const string args = "-i {0} -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" -f mp4 {1}";
 
-            Process.Start(
-                new ProcessStartInfo
-                {
-                    FileName = GetFFFMPEG(),
-                    Arguments = string.Format(args, source, mp4Temp)
-                }).WaitForExit();
+                Process.Start(
+                    new ProcessStartInfo
+                    {
+                        FileName = GetFFFMPEG(),
+                        Arguments = string.Format(args, source, mp4Temp)
+                    }).WaitForExit();
 
-            File.Move(mp4Temp, target);
+                File.Move(mp4Temp, target);
+            }
+            finally
+            {
+                locker.Release();
+            }
         }
 
         public void ValidateFFMMPEG()
