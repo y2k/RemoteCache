@@ -25,11 +25,6 @@
             "frameworkAssemblies": {
                 "System.ServiceModel": "4.0.0.0"
             }
-         },
-        "dnxcore50": {
-            "frameworkAssemblies": {
-                "System.ServiceModel": "4.0.0.0"
-            }
          }
     },
     "exclude": [
