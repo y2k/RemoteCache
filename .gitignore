@@ -16,3 +16,4 @@ RemoteCacheApi/node_modules/
 artifacts/
 nohup.out
 *.userprefs
+RemoteCacheApi/project.lock.json
