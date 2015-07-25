@@ -1,64 +1,58 @@
-﻿using System;
+﻿using RemoteCacheService.Models;
+using System;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using RemoteCacheService.Models;
 
 namespace RemoteCacheService.Controllers
 {
     public class CacheController : Controller
     {
+        RemoteCache imageRepository = new RemoteCache();
+        ImageResizer resizer = new DefaultImageResizer();
+
         public ActionResult Get(string url, string format, string bgColor, int? size = null, int? width = null, int? maxHeight = null)
         {
-            var imageRepository = new RemoteCache();
-            if (bgColor != null)
-                imageRepository.SetJpegBackground(bgColor);
-
             Uri tmp;
             if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             if (size.HasValue && (size < 16 || size > 512))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
+            var path = imageRepository.Get(url, format);
+            if (path == null)
+            {
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
             if (size.HasValue)
             {
-                var data = imageRepository.Square(url, size.Value, format);
-                if (data != null)
-                {
-                    ConfigureCache();
-                    return new FileContentResult(data, "image/jpeg");
-                }
+                throw new NotImplementedException();
             }
             else if (width.HasValue && maxHeight.HasValue)
             {
-                var data = imageRepository.Thumbnail(url, width.Value, maxHeight.Value, format);
-                if (data != null)
-                {
-                    ConfigureCache();
-                    return new FileContentResult(data, "image/jpeg");
-                }
+                if (bgColor != null)
+                    resizer.SetJpegBackground(bgColor);
+
+                var result = resizer.GetRect(path, (int)width, 0.5f, 2);
+                ConfigureCache();
+                return File(result, "image/jpeg");
             }
             else
             {
-                var path = imageRepository.Get(url, format);
-                if (path != null)
-                {
-                    ConfigureCache();
-                    return new FilePathResult(path, "mp4" == format ? "video/mp4" : "image/jpeg");
-                }
+                ConfigureCache();
+                return File(path, "mp4" == format ? "video/mp4" : "image/jpeg");
             }
-
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            return new HttpStatusCodeResult(HttpStatusCode.NotFound);
         }
 
         void ConfigureCache()
         {
-            #if !DEBUG
+#if !DEBUG
             var cache = Response.Cache;
             cache.SetCacheability(HttpCacheability.Public);
             cache.SetExpires(new DateTime(2525, 1, 1));
-            #endif
+#endif
         }
     }
 }
