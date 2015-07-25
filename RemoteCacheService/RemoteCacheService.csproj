@@ -92,7 +92,6 @@
     <Compile Include="Models\ImageResizer.cs" />
     <Compile Include="Models\RemoteCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\Common\ControllerExtensions.cs" />
     <Compile Include="Models\IWorkerService.cs" />
   </ItemGroup>
   <ItemGroup>
