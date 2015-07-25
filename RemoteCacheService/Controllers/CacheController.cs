@@ -11,12 +11,10 @@ namespace RemoteCacheService.Controllers
         RemoteCache imageRepository = new RemoteCache();
         ImageResizer resizer = new DefaultImageResizer();
 
-        public ActionResult Get(string url, string format, string bgColor, int? size = null, int? width = null, int? maxHeight = null)
+        public ActionResult Get(string url, string format, string bgColor, int? width = null)
         {
             Uri tmp;
             if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            if (size.HasValue && (size < 16 || size > 512))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             var path = imageRepository.Get(url, format);
@@ -26,11 +24,7 @@ namespace RemoteCacheService.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            if (size.HasValue)
-            {
-                throw new NotImplementedException();
-            }
-            else if (width.HasValue && maxHeight.HasValue)
+            if (width.HasValue)
             {
                 if (bgColor != null)
                     resizer.SetJpegBackground(bgColor);

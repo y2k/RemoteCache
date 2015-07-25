@@ -18,20 +18,22 @@ namespace RemoteCacheService.Models
                 using (var image = Image.FromStream(source))
                 {
                     f = image.RawFormat;
-                    thumb = Convert(image, width);
+                    thumb = Convert(image, width, minAspect, maxAspect);
                 }
             }
 
             return Encode(thumb, ref f);
         }
 
-        Bitmap Convert(Image image, int width)
+        Bitmap Convert(Image image, int width, float minAspect, float maxAspect)
         {
-            int maxHeight = 0;
-            throw new NotImplementedException();
+            var fh = (float)width / image.Width * image.Height;
+            var minH = width * minAspect;
+            var maxH = width * maxAspect;
 
-            int h = (int)Math.Min(maxHeight, ((float)width / image.Width) * image.Height);
-            var thumb = new Bitmap(width, h);
+            var height = (int)Math.Max(minH, Math.Min(maxH, fh));
+
+            var thumb = new Bitmap(width, height);
             using (var g = NewGraphics(thumb))
             {
                 float s = (float)image.Height / image.Width;
@@ -54,21 +56,21 @@ namespace RemoteCacheService.Models
             if (format == "jpeg" || background != null)
                 f = ImageFormat.Jpeg;
 
-            using (var s = new MemoryStream())
+            var buffer = new MemoryStream();
+            if (f.Guid == ImageFormat.Jpeg.Guid)
             {
-                if (f.Guid == ImageFormat.Jpeg.Guid)
-                {
-                    var enc = ImageCodecInfo.GetImageDecoders().First(i => i.FormatID == ImageFormat.Jpeg.Guid);
-                    var p = new EncoderParameters(1);
-                    p.Param[0] = new EncoderParameter(Encoder.Quality, 90L);
-                    thumb.Save(s, enc, p);
-                }
-                else
-                {
-                    thumb.Save(s, f);
-                }
-                return s;
+                var enc = ImageCodecInfo.GetImageDecoders().First(i => i.FormatID == ImageFormat.Jpeg.Guid);
+                var p = new EncoderParameters(1);
+                p.Param[0] = new EncoderParameter(Encoder.Quality, 90L);
+                thumb.Save(buffer, enc, p);
             }
+            else
+            {
+                thumb.Save(buffer, f);
+            }
+
+            buffer.Position = 0;
+            return buffer;
         }
     }
 }
