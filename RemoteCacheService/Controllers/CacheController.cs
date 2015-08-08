@@ -1,4 +1,4 @@
-﻿using RemoteCacheService.Models;
+﻿using RemoteCacheModel;
 using System;
 using System.Net;
 using System.Web;

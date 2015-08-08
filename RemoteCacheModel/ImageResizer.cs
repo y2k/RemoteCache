@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.IO;
 
-namespace RemoteCacheService.Models
+namespace RemoteCacheModel
 {
-    abstract class ImageResizer
+    public abstract class ImageResizer
     {
         protected Brush background { get; set; }
 

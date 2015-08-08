@@ -1,10 +1,9 @@
-﻿using RemoteCacheDownloader.Service;
-using System;
+﻿using System;
 using System.ServiceModel;
 
-namespace RemoteCacheService.Models
+namespace RemoteCacheModel
 {
-    class RemoteCache
+    public class RemoteCache
     {
         public string Get(string url, string format)
         {

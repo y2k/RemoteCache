@@ -17,3 +17,5 @@ artifacts/
 nohup.out
 *.userprefs
 RemoteCacheApi/project.lock.json
+RemoteCacheModel/obj/
+RemoteCacheModel/bin/

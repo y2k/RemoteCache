@@ -88,11 +88,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\DefaultImageResizer.cs" />
-    <Compile Include="Models\ImageResizer.cs" />
-    <Compile Include="Models\RemoteCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\IWorkerService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -106,6 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RemoteCacheModel\RemoteCacheModel.csproj">
+      <Project>{e9b6661b-b98b-44c5-8945-5c2b376aaac9}</Project>
+      <Name>RemoteCacheModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

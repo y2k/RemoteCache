@@ -1,70 +1,51 @@
-﻿using System;
+﻿using Microsoft.AspNet.Mvc;
+using RemoteCacheModel;
+using System;
 using System.Net;
-using Microsoft.AspNet.Mvc;
-using RemoteCacheApi.Models;
 
 namespace RemoteCacheApi.Controllers
 {
     public class CacheController : Controller
     {
-        CacheModel model = new CacheModel();
+        RemoteCache imageRepository = new RemoteCache();
+        ImageResizer resizer = new DefaultImageResizer();
 
-        public ActionResult Test()
-        {
-            return Content("test");
-        }
-
-        public ActionResult Get(string url, string format, int? size = null, int? width = null, int? maxHeight = null)
+        public ActionResult Get(string url, string format, string bgColor, int? width = null)
         {
             Uri tmp;
             if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
                 return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
-            if (size.HasValue && (size < 16 || size > 512))
-                return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
 
-            if (size.HasValue)
+            var path = imageRepository.Get(url, format);
+            if (path == null)
             {
-                var data = model.Square(url, size.Value, format);
-                if (data != null)
-                {
-#if !DEBUG
-                    var cache = Response.Cache;
-                    cache.SetCacheability(HttpCacheability.Public);
-                    cache.SetExpires(new DateTime(2525, 1, 1));
-#endif
-                    return new FileStreamResult(data, "image/jpeg");
-                }
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
             }
-            else if (width.HasValue && maxHeight.HasValue)
+
+            if (width.HasValue)
             {
-                var data = model.Thumbnail(url, width.Value, maxHeight.Value, format);
-                if (data != null)
-                {
-#if !DEBUG
-                    var cache = Response.Cache;
-                    cache.SetCacheability(HttpCacheability.Public);
-                    cache.SetExpires(new DateTime(2525, 1, 1));
-#endif
-                    return new FileContentResult(data, "image/jpeg");
-                }
+                if (bgColor != null)
+                    resizer.SetJpegBackground(bgColor);
+
+                var result = resizer.GetRect(path, (int)width, 0.5f, 2);
+                ConfigureCache();
+                return File(result, "image/jpeg");
             }
             else
             {
-                var path = model.Get(url);
-                if (path != null)
-                {
-#if !DEBUG
-                    var cache = Response.Cache;
-                    cache.SetCacheability(HttpCacheability.Public);
-                    cache.SetExpires(new DateTime(2525, 1, 1));
-#endif
-                    //  return new FilePathResult(path, "image/jpeg");
-                    return new FileStreamResult(System.IO.File.Open(path,System.IO.FileMode.Open), "image/jpeg");
-                }
+                ConfigureCache();
+                return File(path, "mp4" == format ? "video/mp4" : "image/jpeg");
             }
+        }
 
-            //Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+        void ConfigureCache()
+        {
+#if !DEBUG
+            var cache = Response.Cache;
+            cache.SetCacheability(HttpCacheability.Public);
+            cache.SetExpires(new DateTime(2525, 1, 1));
+#endif
         }
     }
 }
