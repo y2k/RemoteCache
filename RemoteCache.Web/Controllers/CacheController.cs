@@ -2,6 +2,7 @@
 using RemoteCache.Web.Models;
 using System;
 using System.Net;
+using System.IO;
 
 namespace RemoteCache.Web.Controllers
 {
@@ -35,7 +36,8 @@ namespace RemoteCache.Web.Controllers
             else
             {
                 ConfigureCache();
-                return File(path, "mp4" == format ? "video/mp4" : "image/jpeg");
+                var data = new FileStream(path, FileMode.Open);
+                return File(data, "mp4" == format ? "video/mp4" : "image/jpeg");
             }
         }
 
