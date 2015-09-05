@@ -16,6 +16,8 @@ namespace RemoteCache.Worker
 
             WorkerManager.Instance.Start();
             Console.WriteLine("Initialize downloaders complete");
+
+            System.Threading.Thread.Sleep(-1);
 		}
 	}
 }
