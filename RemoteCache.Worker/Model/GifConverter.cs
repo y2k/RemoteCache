@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace RemoteCacheDownloader
+namespace RemoteCache.Worker.Model
 {
     public class GifConverter
     {

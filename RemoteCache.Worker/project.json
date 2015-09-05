@@ -1,0 +1,14 @@
+{
+    "version": "1.0.0-*",
+    "commands": {
+        "run": "RemoteCache.Worker"
+    },
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.ServiceModel": "4.0.0.0",
+                "System.Drawing": "4.0.0.0"
+            }
+        }
+    }
+}

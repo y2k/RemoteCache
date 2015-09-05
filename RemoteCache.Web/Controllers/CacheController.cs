@@ -1,10 +1,9 @@
-﻿using RemoteCacheModel;
+﻿using Microsoft.AspNet.Mvc;
+using RemoteCacheModel;
 using System;
 using System.Net;
-using System.Web;
-using System.Web.Mvc;
 
-namespace RemoteCacheService.Controllers
+namespace RemoteCacheApi.Controllers
 {
     public class CacheController : Controller
     {
@@ -15,13 +14,13 @@ namespace RemoteCacheService.Controllers
         {
             Uri tmp;
             if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
 
             var path = imageRepository.Get(url, format);
             if (path == null)
             {
-                Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                //  Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
             }
 
             if (width.HasValue)
@@ -42,11 +41,11 @@ namespace RemoteCacheService.Controllers
 
         void ConfigureCache()
         {
-#if !DEBUG
-            var cache = Response.Cache;
-            cache.SetCacheability(HttpCacheability.Public);
-            cache.SetExpires(new DateTime(2525, 1, 1));
-#endif
+//  #if !DEBUG
+//              var cache = Response.Cache;
+//              cache.SetCacheability(HttpCacheability.Public);
+//              cache.SetExpires(new DateTime(2525, 1, 1));
+//  #endif
         }
     }
 }

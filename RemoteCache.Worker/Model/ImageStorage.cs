@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace RemoteCacheDownloader.Model
+namespace RemoteCache.Worker.Model
 {
     class ImageStorage
     {

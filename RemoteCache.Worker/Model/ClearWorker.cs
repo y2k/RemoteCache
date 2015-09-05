@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace RemoteCacheDownloader.Model
+namespace RemoteCache.Worker.Model
 {
     class ClearWorker
     {

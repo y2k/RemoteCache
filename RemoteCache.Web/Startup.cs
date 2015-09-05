@@ -3,7 +3,7 @@ using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Routing;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using System;
@@ -47,7 +47,11 @@ namespace RemoteCacheApi
             {
                 // Add Error handling middleware which catches all application specific errors and
                 // send the request to the following path or controller action.
-                app.UseErrorHandler("/Home/Error");
+                
+                // TODO: Добавить поддержку DEV окружения
+                app.UseErrorPage();
+                app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
+                //  app.UseErrorHandler("/Home/Error");
             }
 
             // Add static files to the request pipeline.

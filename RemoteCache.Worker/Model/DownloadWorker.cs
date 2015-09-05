@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 
-namespace RemoteCacheDownloader.Model
+namespace RemoteCache.Worker.Model
 {
     class DownloadWorker
     {

@@ -19,3 +19,9 @@ nohup.out
 RemoteCacheApi/project.lock.json
 RemoteCacheModel/obj/
 RemoteCacheModel/bin/
+RemoteCache.Web/bin/
+RemoteCache.Worker/Cache/
+wrap/RemoteCacheModel/project.lock.json
+RemoteCache.Worker/project.lock.json
+RemoteCache.Worker/bin/
+RemoteCache.Web/project.lock.json

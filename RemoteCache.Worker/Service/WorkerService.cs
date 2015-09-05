@@ -2,10 +2,9 @@
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Description;
-using RemoteCacheDownloader.Model;
-using RemoteCacheDownloader.Service;
+using RemoteCache.Worker.Model;
 
-namespace RemoteCacheDownloader
+namespace RemoteCache.Worker.Service
 {
     public class WorkerService : IWorkerService
     {

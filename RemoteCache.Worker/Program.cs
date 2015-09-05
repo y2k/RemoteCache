@@ -1,12 +1,13 @@
-﻿using System;
-using RemoteCacheDownloader.Model;
+using System;
+using RemoteCache.Worker.Model;
+using RemoteCache.Worker.Service;
 
-namespace RemoteCacheDownloader
+namespace RemoteCache.Worker
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
+	public class Program
+	{
+		public static void Main() 
+		{
             Console.WriteLine("Program start");
             GifConverter.Instance.ValidateFFMMPEG();
 
@@ -17,6 +18,6 @@ namespace RemoteCacheDownloader
             Console.WriteLine("Initialize downloaders complete");
 
             Console.ReadLine();
-        }
-    }
+		}
+	}
 }
