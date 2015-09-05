@@ -3,7 +3,7 @@ using System.ServiceModel;
 
 namespace RemoteCache.Web.Models
 {
-    public class RemoteCache
+    public class RemoteImageRepository
     {
         public string Get(string url, string format)
         {

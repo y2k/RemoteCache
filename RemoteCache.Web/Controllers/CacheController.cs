@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNet.Mvc;
-using RemoteCacheModel;
+using RemoteCache.Web.Models;
 using System;
 using System.Net;
 
-namespace RemoteCacheApi.Controllers
+namespace RemoteCache.Web.Controllers
 {
     public class CacheController : Controller
     {
-        RemoteCache imageRepository = new RemoteCache();
+        RemoteImageRepository imageRepository = new RemoteImageRepository();
         BaseImageResizer resizer = new DefaultImageResizer();
 
         public ActionResult Get(string url, string format, string bgColor, int? width = null)
