@@ -25,3 +25,4 @@ wrap/RemoteCacheModel/project.lock.json
 RemoteCache.Worker/project.lock.json
 RemoteCache.Worker/bin/
 RemoteCache.Web/project.lock.json
+.settings

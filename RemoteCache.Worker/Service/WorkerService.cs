@@ -10,7 +10,7 @@ namespace RemoteCache.Worker.Service
     {
         public void AddWork(Uri source)
         {
-            Console.WriteLine("Get new work {0}" + source);
+            Console.WriteLine("Get new work " + source);
             WorkerManager.Instance.AddWork(source);
         }
 
