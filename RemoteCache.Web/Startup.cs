@@ -43,16 +43,6 @@ namespace RemoteCacheApi
                 app.UseErrorPage();
                 app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
             }
-            else
-            {
-                // Add Error handling middleware which catches all application specific errors and
-                // send the request to the following path or controller action.
-                
-                // TODO: Добавить поддержку DEV окружения
-                app.UseErrorPage();
-                app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
-                //  app.UseErrorHandler("/Home/Error");
-            }
 
             // Add static files to the request pipeline.
             //app.UseStaticFiles();

@@ -14,7 +14,7 @@ namespace RemoteCacheModel
         {
             var factory = new ChannelFactory<IWorkerService>(
                               new BasicHttpBinding(), 
-                              new EndpointAddress("http://localhost:8192/remote-cache"));
+                              new EndpointAddress("http://localhost:8500/remote-cache"));
             var client = factory.CreateChannel();
             try
             {

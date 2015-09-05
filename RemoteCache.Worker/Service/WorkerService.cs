@@ -32,7 +32,7 @@ namespace RemoteCache.Worker.Service
 
         public static void InitializeService()
         {
-            var host = new ServiceHost(typeof(WorkerService), new Uri("http://localhost:8192/remote-cache"));
+            var host = new ServiceHost(typeof(WorkerService), new Uri("http://localhost:8500/remote-cache"));
             host.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = false });
             host.Open();
         }
