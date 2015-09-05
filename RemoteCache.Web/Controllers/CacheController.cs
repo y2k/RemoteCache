@@ -8,7 +8,7 @@ namespace RemoteCacheApi.Controllers
     public class CacheController : Controller
     {
         RemoteCache imageRepository = new RemoteCache();
-        ImageResizer resizer = new DefaultImageResizer();
+        BaseImageResizer resizer = new DefaultImageResizer();
 
         public ActionResult Get(string url, string format, string bgColor, int? width = null)
         {

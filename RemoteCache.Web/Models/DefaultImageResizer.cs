@@ -4,9 +4,9 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 
-namespace RemoteCacheModel
+namespace RemoteCache.Web.Models
 {
-    public class DefaultImageResizer : ImageResizer
+    public class DefaultImageResizer : BaseImageResizer
     {
         public override Stream GetRect(string imagePath, int width, float minAspect = 1, float maxAspect = 1)
         {

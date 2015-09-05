@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ServiceModel;
 
-namespace RemoteCacheModel
+namespace RemoteCache.Web.Models
 {
     public class RemoteCache
     {

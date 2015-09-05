@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Routing;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
