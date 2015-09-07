@@ -23,6 +23,22 @@ namespace RemoteCache.Web.Controllers
             return File(data, "mp4" == format ? "video/mp4" : "image/jpeg");
         }
 
+        [Route("fit")]
+        public ActionResult Fit(string url, int width, int height, string bgColor)
+        {
+            var path = imageRepository.Get(url, null);
+            if (path == null)
+                return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+
+            if (bgColor != null)
+                resizer.SetJpegBackground(bgColor);
+
+            var aspect = (float)width / height;
+            var result = resizer.GetRect(path, width, aspect, aspect);
+            ConfigureCache();
+            return File(result, "image/jpeg");
+        }
+
         [Route("fitWidth")]
         public ActionResult FitWidth(string url, int width, string bgColor, float? minAspect = null, float? maxAspect = null)
         {
