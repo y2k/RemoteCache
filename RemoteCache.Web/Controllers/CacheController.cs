@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Mvc;
 using RemoteCache.Web.Models;
-using System;
 using System.IO;
 using System.Net;
 
@@ -15,43 +14,43 @@ namespace RemoteCache.Web.Controllers
         [Route("original")]
         public ActionResult Original(string url, string format)
         {
-            return DoExecute(url, format, null, null);
+            var path = imageRepository.Get(url, format);
+            if (path == null)
+                return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+
+            ConfigureCache();
+            var data = new FileStream(path, FileMode.Open);
+            return File(data, "mp4" == format ? "video/mp4" : "image/jpeg");
         }
 
         [Route("fitWidth")]
-        public ActionResult FitWidth(string url, int width, string format, string bgColor)
+        public ActionResult FitWidth(string url, int width, string bgColor, float? minAspect = null, float? maxAspect = null)
         {
-            return DoExecute(url, format, bgColor, width);
+            var path = imageRepository.Get(url, null);
+            if (path == null)
+                return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+
+            if (bgColor != null)
+                resizer.SetJpegBackground(bgColor);
+
+            var result = resizer.GetRect(path, width, minAspect ?? 0.5f, maxAspect ?? 2);
+            ConfigureCache();
+            return File(result, "image/jpeg");
         }
 
-        ActionResult DoExecute(string url, string format, string bgColor, int? width)
+        [Route("fitSize")]
+        public ActionResult FitSize(string url, int size, string format, string bgColor)
         {
-            Uri tmp;
-            if (!Uri.TryCreate(url, UriKind.Absolute, out tmp))
-                return new HttpStatusCodeResult((int)HttpStatusCode.BadRequest);
-
-            var path = imageRepository.Get(url, format);
+            var path = imageRepository.Get(url, null);
             if (path == null)
-            {
-                //  Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
-            }
 
-            if (width.HasValue)
-            {
-                if (bgColor != null)
-                    resizer.SetJpegBackground(bgColor);
+            if (bgColor != null)
+                resizer.SetJpegBackground(bgColor);
 
-                var result = resizer.GetRect(path, (int)width, 0.5f, 2);
-                ConfigureCache();
-                return File(result, "image/jpeg");
-            }
-            else
-            {
-                ConfigureCache();
-                var data = new FileStream(path, FileMode.Open);
-                return File(data, "mp4" == format ? "video/mp4" : "image/jpeg");
-            }
+            var result = resizer.GetRect(path, size);
+            ConfigureCache();
+            return File(result, "image/jpeg");
         }
 
         void ConfigureCache()
