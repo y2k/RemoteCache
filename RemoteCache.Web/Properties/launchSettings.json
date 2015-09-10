@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "cache/fitWidth?width=150&size=150&url=http%3A%2F%2Fimg0.joyreactor.cc%2Fpics%2Fpost%2F-2401822.jpeg",
+      "environmentVariables": {
+        "ASPNET_ENV": "Development"
+      }
+    }
+  }
+}

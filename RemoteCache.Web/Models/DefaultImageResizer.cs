@@ -18,18 +18,23 @@ namespace RemoteCache.Web.Models
                 using (var image = Image.FromStream(source))
                 {
                     f = image.RawFormat;
-                    thumb = Convert(image, width, minAspect, maxAspect);
+                    thumb = Convert(image, NormalizeWidth(width), minAspect, maxAspect);
                 }
             }
 
             return Encode(thumb, ref f);
         }
 
+        private static int NormalizeWidth(int width)
+        {
+            return Math.Max(10, Math.Min(1000, width));
+        }
+
         Bitmap Convert(Image image, int width, float minAspect, float maxAspect)
         {
             var fh = (float)width / image.Width * image.Height;
-            var minH = width * minAspect;
-            var maxH = width * maxAspect;
+            var minH = width / maxAspect;
+            var maxH = width / minAspect;
 
             var height = (int)Math.Max(minH, Math.Min(maxH, fh));
 
@@ -37,7 +42,16 @@ namespace RemoteCache.Web.Models
             using (var g = NewGraphics(thumb))
             {
                 float s = (float)image.Height / image.Width;
-                g.DrawImage(image, 0, -(thumb.Width * s - thumb.Height) / 2, thumb.Width, thumb.Width * s);
+                var rect = new RectangleF(0, -(thumb.Width * s - thumb.Height) / 2, thumb.Width, thumb.Width * s);
+                if (rect.Height < thumb.Height)
+                {
+                    var correctScale = thumb.Height / rect.Height;
+                    rect.Height *= correctScale;
+                    rect.Width *= correctScale;
+                    rect.X = (thumb.Width - rect.Width) / 2;
+                    rect.Y = 0;
+                }
+                g.DrawImage(image, rect);
             }
             return thumb;
         }
