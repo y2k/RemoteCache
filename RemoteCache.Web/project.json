@@ -2,19 +2,16 @@
     "webroot": "wwwroot",
     "version": "1.0.0-*",
     "dependencies": {
-        "Microsoft.AspNet.Server.Kestrel": "1.0.0-beta7",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta7",
+        "Microsoft.AspNet.Server.Kestrel": "1.0.0-beta8",
+        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta8",
+        "Microsoft.AspNet.Mvc": "6.0.0-beta8",
+        "Microsoft.AspNet.Diagnostics": "1.0.0-beta8",
+        "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-beta8",
+        "Microsoft.Framework.Configuration.Json": "1.0.0-beta8",
+
+        "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta8",
         
-        "ImageResizer": "4.0.0-*",
-
-        "Microsoft.AspNet.Server.IIS": "1.0.0-beta7",
-        "Microsoft.AspNet.Mvc": "6.0.0-beta7",
-
-        "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta7",
-        "Microsoft.AspNet.Diagnostics": "1.0.0-beta7",
-        "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-beta7",
-
-        "Microsoft.Framework.Configuration.Json": "1.0.0-beta7"
+        "ImageResizer": "4.0.0-*"
     },
     "commands": {
         "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:8501",
