@@ -2,14 +2,14 @@
     "webroot": "wwwroot",
     "version": "1.0.0-*",
     "dependencies": {
-        "Microsoft.AspNet.Server.Kestrel": "1.0.0-beta8",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta8",
-        "Microsoft.AspNet.Mvc": "6.0.0-beta8",
-        "Microsoft.AspNet.Diagnostics": "1.0.0-beta8",
-        "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-beta8",
-        "Microsoft.Framework.Configuration.Json": "1.0.0-beta8",
+        "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Server.WebListener": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
+        "Microsoft.AspNet.Diagnostics": "1.0.0-rc1-final",
+        "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-rc1-final",
+        "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
 
-        "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta8",
+        "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc1-final",
         
         "ImageResizer": "4.0.0-*"
     },

@@ -1,8 +1,5 @@
 {
     "version": "1.0.0-*",
-    "commands": {
-        "run": "RemoteCache.Worker"
-    },
     "frameworks": {
         "dnx451": {
             "frameworkAssemblies": {
