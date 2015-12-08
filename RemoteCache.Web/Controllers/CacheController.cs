@@ -20,6 +20,7 @@ namespace RemoteCache.Web.Controllers
 
             ConfigureCache();
             var data = new FileStream(path, FileMode.Open);
+            Response.ContentLength = data.Length;
             return File(data, "mp4" == format ? "video/mp4" : "image/jpeg");
         }
 
@@ -36,6 +37,7 @@ namespace RemoteCache.Web.Controllers
             var aspect = (float)width / height;
             var result = resizer.GetRect(path, width, aspect, aspect);
             ConfigureCache();
+            Response.ContentLength = result.Length;
             return File(result, "image/jpeg");
         }
 
@@ -51,6 +53,7 @@ namespace RemoteCache.Web.Controllers
 
             var result = resizer.GetRect(path, width, minAspect ?? 0.5f, maxAspect ?? 2);
             ConfigureCache();
+            Response.ContentLength = result.Length;
             return File(result, "image/jpeg");
         }
 
@@ -66,6 +69,7 @@ namespace RemoteCache.Web.Controllers
 
             var result = resizer.GetRect(path, size);
             ConfigureCache();
+            Response.ContentLength = result.Length;
             return File(result, "image/jpeg");
         }
 
