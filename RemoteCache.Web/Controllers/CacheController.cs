@@ -1,18 +1,21 @@
-﻿using Microsoft.AspNet.Mvc;
-using RemoteCache.Web.Models;
+﻿using System;
 using System.IO;
 using System.Net;
+using Microsoft.AspNet.Mvc;
+using RemoteCache.Web.Models;
 
 namespace RemoteCache.Web.Controllers
 {
     [Route("[controller]")]
     public class CacheController : Controller
     {
+        private const int CacheDuration = 7 * 24 * 3600;
+        
         RemoteImageRepository imageRepository = new RemoteImageRepository();
         BaseImageResizer resizer = new DefaultImageResizer();
 
         [Route("original")]
-        [ResponseCache(Duration = 24 * 3600)]
+        [ResponseCache(Duration = CacheDuration)]
         public ActionResult Original(string url, string format)
         {
             var path = imageRepository.Get(url, format);
@@ -26,7 +29,7 @@ namespace RemoteCache.Web.Controllers
         }
 
         [Route("fit")]
-        [ResponseCache(Duration = 24 * 3600)]
+        [ResponseCache(Duration = CacheDuration)]
         public ActionResult Fit(string url, int width, int height, string bgColor)
         {
             var path = imageRepository.Get(url, null);
@@ -44,7 +47,8 @@ namespace RemoteCache.Web.Controllers
         }
 
         [Route("fitWidth")]
-        [ResponseCache(Duration = 24 * 3600)]
+        [ResponseCache(Duration = CacheDuration)]
+        [Obsolete]
         public ActionResult FitWidth(string url, int width, string bgColor, float? minAspect = null, float? maxAspect = null)
         {
             var path = imageRepository.Get(url, null);
@@ -61,7 +65,8 @@ namespace RemoteCache.Web.Controllers
         }
 
         [Route("fitSize")]
-        [ResponseCache(Duration = 24 * 3600)]
+        [ResponseCache(Duration = CacheDuration)]
+        [Obsolete]
         public ActionResult FitSize(string url, int size, string format, string bgColor)
         {
             var path = imageRepository.Get(url, null);
@@ -77,6 +82,7 @@ namespace RemoteCache.Web.Controllers
             return File(result, "image/jpeg");
         }
 
+        [Obsolete]
         void ConfigureCache()
         {
             //  #if !DEBUG
