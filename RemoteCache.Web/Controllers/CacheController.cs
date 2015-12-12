@@ -16,8 +16,10 @@ namespace RemoteCache.Web.Controllers
         public ActionResult Original(string url, string format)
         {
             var path = imageRepository.Get(url, format);
-            if (path == null)
+            if (path == null) {
+                Response.ContentLength = 0;
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+            }
 
             var data = new FileStream(path, FileMode.Open);
             Response.ContentLength = data.Length;
@@ -47,8 +49,10 @@ namespace RemoteCache.Web.Controllers
         public ActionResult FitWidth(string url, int width, string bgColor, float? minAspect = null, float? maxAspect = null)
         {
             var path = imageRepository.Get(url, null);
-            if (path == null)
+            if (path == null) {
+                Response.ContentLength = 0;
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+            }
 
             if (bgColor != null)
                 resizer.SetJpegBackground(bgColor);
@@ -63,8 +67,10 @@ namespace RemoteCache.Web.Controllers
         public ActionResult FitSize(string url, int size, string format, string bgColor)
         {
             var path = imageRepository.Get(url, null);
-            if (path == null)
+            if (path == null) {
+                Response.ContentLength = 0;
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+            }
 
             if (bgColor != null)
                 resizer.SetJpegBackground(bgColor);
