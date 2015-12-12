@@ -32,8 +32,10 @@ namespace RemoteCache.Web.Controllers
         public ActionResult Fit(string url, int width, int height, string bgColor)
         {
             var path = imageRepository.Get(url, null);
-            if (path == null)
+            if (path == null) {
+                Response.ContentLength = 0;
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+            }
 
             if (bgColor != null)
                 resizer.SetJpegBackground(bgColor);
