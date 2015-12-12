@@ -29,7 +29,6 @@ namespace RemoteCache.Web.Controllers
         }
 
         [Route("fit")]
-        [ResponseCache(Duration = CacheDuration)]
         public ActionResult Fit(string url, int width, int height, string bgColor)
         {
             var path = imageRepository.Get(url, null);
