@@ -12,9 +12,10 @@ namespace RemoteCache.Web.Models
 
         string GetImagePathFromRemoteService(string url, string extraLayer = null)
         {
+            var workerHost = Environment.GetEnvironmentVariable("worker_host") ?? "localhost";
             var factory = new ChannelFactory<IWorkerService>(
                               new BasicHttpBinding(), 
-                              new EndpointAddress("http://localhost:8500/remote-cache"));
+                              new EndpointAddress("http://" + workerHost + ":8500/remote-cache"));
             var client = factory.CreateChannel();
             try
             {
