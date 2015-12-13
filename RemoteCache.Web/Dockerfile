@@ -1,5 +1,7 @@
 FROM microsoft/aspnet:latest
 
+ENV ASPNET_ENV Development
+
 COPY . /app/
 WORKDIR /app
 RUN ["dnu", "restore"]
