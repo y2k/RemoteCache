@@ -3,13 +3,15 @@ FROM microsoft/aspnet:latest
 ENV ASPNET_ENV Development
 
 RUN apt-get -qq update && apt-get -qqy install nginx
-COPY nginx.config /etc/nginx/sites-enabled/
+COPY nginx.conf /etc/nginx/sites-enabled/nginx.conf
 RUN mkdir -p /tmp/cache
-RUN nginx -s reload 
 
 COPY . /app/
 WORKDIR /app
 RUN ["dnu", "restore"]
 
-EXPOSE 8501
-ENTRYPOINT ["dnx", "-p", "project.json", "web"]
+EXPOSE 8010 8012
+
+RUN echo "#!/bin/bash \n nginx & \n dnx -p project.json web" >> /run.sh
+RUN chmod +x /run.sh
+ENTRYPOINT ["/run.sh"]
