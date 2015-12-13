@@ -1,6 +1,7 @@
 FROM microsoft/aspnet:latest
 
 ENV ASPNET_ENV Development
+ENV worker_host $WORKER_PORT_8500_TCP_ADDR
 
 COPY . /app/
 WORKDIR /app
