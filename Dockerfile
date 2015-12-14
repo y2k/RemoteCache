@@ -7,7 +7,7 @@ RUN curl -O http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static
 	tar xf ffmpeg-release-64bit-static.tar.xz && \
 	rm ffmpeg-release-64bit-static.tar.xz
 
-ENV REMOTECACHE_FFMPEG_DIR $PWD/ffmpeg-2.8.3-64bit-static
+ENV REMOTECACHE_FFMPEG_DIR /app/ffmpeg-2.8.3-64bit-static
 ENV ASPNET_ENV Development
 
 RUN apt-get -qq update && \
