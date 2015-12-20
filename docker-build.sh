@@ -1,1 +1,1 @@
-docker build -t remote-cache .
+docker build -t "remote-cache" .
