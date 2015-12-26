@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using Microsoft.AspNet.Mvc;
 using RemoteCache.Web.Models;
@@ -10,7 +9,7 @@ namespace RemoteCache.Web.Controllers
     public class CacheController : Controller
     {
         RemoteImageRepository imageRepository = new RemoteImageRepository();
-        BaseImageResizer resizer = new DefaultImageResizer();
+        BaseImageResizer resizer = new ModernImageResizer();
 
         [Route("original")]
         public ActionResult Original(string url, string format)
@@ -35,47 +34,9 @@ namespace RemoteCache.Web.Controllers
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
             }
 
-            if (bgColor != null)
-                resizer.SetJpegBackground(bgColor);
+            resizer.BackgroundColor = bgColor;
 
-            var aspect = (float)width / height;
-            var result = resizer.GetRect(quality, path, width, aspect, aspect);
-            Response.ContentLength = result.Length;
-            return File(result, "image/jpeg");
-        }
-
-        [Route("fitWidth")]
-        [Obsolete]
-        public ActionResult FitWidth(string url, int width, string bgColor, float? minAspect = null, float? maxAspect = null)
-        {
-            var path = imageRepository.Get(url, null);
-            if (path == null) {
-                Response.ContentLength = 0;
-                return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
-            }
-
-            if (bgColor != null)
-                resizer.SetJpegBackground(bgColor);
-
-            var result = resizer.GetRect(null, path, width, minAspect ?? 0.5f, maxAspect ?? 2);
-            Response.ContentLength = result.Length;
-            return File(result, "image/jpeg");
-        }
-
-        [Route("fitSize")]
-        [Obsolete]
-        public ActionResult FitSize(string url, int size, string format, string bgColor)
-        {
-            var path = imageRepository.Get(url, null);
-            if (path == null) {
-                Response.ContentLength = 0;
-                return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
-            }
-
-            if (bgColor != null)
-                resizer.SetJpegBackground(bgColor);
-
-            var result = resizer.GetRect(null, path, size);
+            var result = resizer.GetRect(quality, path, width, height);
             Response.ContentLength = result.Length;
             return File(result, "image/jpeg");
         }

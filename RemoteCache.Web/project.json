@@ -11,7 +11,7 @@
 
         "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc1-final",
         
-        "ImageResizer": "4.0.0-*"
+        "ImageResizer": "4.0.4"
     },
     "commands": {
         "web": "Microsoft.AspNet.Server.Kestrel --server.urls http://*:8501"

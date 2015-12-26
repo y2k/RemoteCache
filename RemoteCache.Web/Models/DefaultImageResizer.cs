@@ -7,32 +7,27 @@ using System.Linq;
 
 namespace RemoteCache.Web.Models
 {
-    public class DefaultImageResizer : BaseImageResizer
-    {
-        public override Stream GetRect(int? quality, string imagePath, int width, float minAspect = 1, float maxAspect = 1)
-        {
+    public class DefaultImageResizer : BaseImageResizer {
+        
+        public override Stream GetRect(int? quality, string imagePath, int width, int height) {
             Image thumb;
             ImageFormat f;
 
-            using (var source = File.OpenRead(imagePath))
-            {
-                using (var image = Image.FromStream(source))
-                {
+            using (var source = File.OpenRead(imagePath)) {
+                using (var image = Image.FromStream(source)) {
                     f = image.RawFormat;
-                    thumb = Convert(image, NormalizeWidth(width), minAspect, maxAspect);
+                    var aspect = (float)width / height;
+                    thumb = Convert(image, NormalizeWidth(width), aspect, aspect);
                 }
             }
-
             return Encode(thumb, ref f, quality);
         }
 
-        private static int NormalizeWidth(int width)
-        {
+        private static int NormalizeWidth(int width) {
             return Math.Max(10, Math.Min(1000, width));
         }
 
-        Bitmap Convert(Image image, int width, float minAspect, float maxAspect)
-        {
+        Bitmap Convert(Image image, int width, float minAspect, float maxAspect) {
             var fh = (float)width / image.Width * image.Height;
             var minH = width / maxAspect;
             var maxH = width / minAspect;
@@ -57,8 +52,7 @@ namespace RemoteCache.Web.Models
             return thumb;
         }
 
-        Graphics NewGraphics(Bitmap thumb)
-        {
+        Graphics NewGraphics(Bitmap thumb) {
             var canvas = Graphics.FromImage(thumb);
             canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
             if (background != null)
@@ -66,10 +60,9 @@ namespace RemoteCache.Web.Models
             return canvas;
         }
 
-        Stream Encode(Image thumb, ref ImageFormat f, int? quality)
-        {
+        Stream Encode(Image thumb, ref ImageFormat f, int? quality) {
             // Принудительно конвертируем в jpeg
-            if (format == "jpeg" || background != null)
+            if (background != null)
                 f = ImageFormat.Jpeg;
 
             var buffer = new MemoryStream();

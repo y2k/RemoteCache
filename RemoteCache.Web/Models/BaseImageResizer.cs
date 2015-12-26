@@ -4,18 +4,18 @@ using System.IO;
 
 namespace RemoteCache.Web.Models
 {
-    public abstract class BaseImageResizer
-    {
-        protected Brush background { get; set; }
-
-        public string format { get; set; }
-
-        public void SetJpegBackground(string hexColor)
-        {
-            var color = Convert.ToInt32(hexColor, 16);
-            background = new SolidBrush(Color.FromArgb(0xFF, Color.FromArgb(color)));
+    public abstract class BaseImageResizer {
+        
+        protected Brush background { 
+            get {
+                if (BackgroundColor == null) return null;
+                var color = Convert.ToInt32(BackgroundColor, 16);
+                return new SolidBrush(Color.FromArgb(0xFF, Color.FromArgb(color)));
+            }
         }
+        
+        public string BackgroundColor { get; set; }
 
-        public abstract Stream GetRect(int? quality, string imagePath, int width, float minAspect = 1, float maxAspect = 1);
+        public abstract Stream GetRect(int? quality, string imagePath, int width, int height);
     }
 }
