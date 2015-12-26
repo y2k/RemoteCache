@@ -20,6 +20,7 @@ namespace RemoteCache.Web.Models
                     thumb = Convert(image, NormalizeWidth(width), aspect, aspect);
                 }
             }
+            
             return Encode(thumb, ref f, quality);
         }
 
@@ -68,10 +69,7 @@ namespace RemoteCache.Web.Models
             var buffer = new MemoryStream();
             if (f.Guid == ImageFormat.Jpeg.Guid)
             {
-                var enc = ImageCodecInfo.GetImageDecoders().First(i => i.FormatID == ImageFormat.Jpeg.Guid);
-                var p = new EncoderParameters(1);
-                p.Param[0] = new EncoderParameter(Encoder.Quality, (long)Math.Max(5, Math.Min(100, quality ?? 90)));
-                thumb.Save(buffer, enc, p);
+                EncodeToJpeg(buffer, thumb, Math.Max(5, Math.Min(100, quality ?? 90)));
             }
             else
             {
@@ -80,6 +78,13 @@ namespace RemoteCache.Web.Models
 
             buffer.Position = 0;
             return buffer;
+        }
+        
+        protected virtual void EncodeToJpeg(Stream stream, Image image, int quality) {
+            var enc = ImageCodecInfo.GetImageDecoders().First(i => i.FormatID == ImageFormat.Jpeg.Guid);
+            var p = new EncoderParameters(1);
+            p.Param[0] = new EncoderParameter(Encoder.Quality, (long)quality);
+            image.Save(stream, enc, p);
         }
     }
 }

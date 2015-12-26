@@ -9,7 +9,7 @@ namespace RemoteCache.Web.Controllers
     public class CacheController : Controller
     {
         RemoteImageRepository imageRepository = new RemoteImageRepository();
-        BaseImageResizer resizer = new ModernImageResizer();
+        BaseImageResizer resizer = new BitMiracleImageResizer();
 
         [Route("original")]
         public ActionResult Original(string url, string format)
