@@ -27,7 +27,7 @@ namespace RemoteCache.Web.Controllers
         }
 
         [Route("fit")]
-        public ActionResult Fit(string url, int width, int height, string bgColor)
+        public ActionResult Fit(string url, int width, int height, string bgColor, int? quality)
         {
             var path = imageRepository.Get(url, null);
             if (path == null) {
@@ -39,7 +39,7 @@ namespace RemoteCache.Web.Controllers
                 resizer.SetJpegBackground(bgColor);
 
             var aspect = (float)width / height;
-            var result = resizer.GetRect(path, width, aspect, aspect);
+            var result = resizer.GetRect(quality, path, width, aspect, aspect);
             Response.ContentLength = result.Length;
             return File(result, "image/jpeg");
         }
@@ -57,7 +57,7 @@ namespace RemoteCache.Web.Controllers
             if (bgColor != null)
                 resizer.SetJpegBackground(bgColor);
 
-            var result = resizer.GetRect(path, width, minAspect ?? 0.5f, maxAspect ?? 2);
+            var result = resizer.GetRect(null, path, width, minAspect ?? 0.5f, maxAspect ?? 2);
             Response.ContentLength = result.Length;
             return File(result, "image/jpeg");
         }
@@ -75,7 +75,7 @@ namespace RemoteCache.Web.Controllers
             if (bgColor != null)
                 resizer.SetJpegBackground(bgColor);
 
-            var result = resizer.GetRect(path, size);
+            var result = resizer.GetRect(null, path, size);
             Response.ContentLength = result.Length;
             return File(result, "image/jpeg");
         }

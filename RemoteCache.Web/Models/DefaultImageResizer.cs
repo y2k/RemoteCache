@@ -9,7 +9,7 @@ namespace RemoteCache.Web.Models
 {
     public class DefaultImageResizer : BaseImageResizer
     {
-        public override Stream GetRect(string imagePath, int width, float minAspect = 1, float maxAspect = 1)
+        public override Stream GetRect(int? quality, string imagePath, int width, float minAspect = 1, float maxAspect = 1)
         {
             Image thumb;
             ImageFormat f;
@@ -23,7 +23,7 @@ namespace RemoteCache.Web.Models
                 }
             }
 
-            return Encode(thumb, ref f);
+            return Encode(thumb, ref f, quality);
         }
 
         private static int NormalizeWidth(int width)
@@ -66,7 +66,7 @@ namespace RemoteCache.Web.Models
             return canvas;
         }
 
-        Stream Encode(Image thumb, ref ImageFormat f)
+        Stream Encode(Image thumb, ref ImageFormat f, int? quality)
         {
             // Принудительно конвертируем в jpeg
             if (format == "jpeg" || background != null)
@@ -77,7 +77,7 @@ namespace RemoteCache.Web.Models
             {
                 var enc = ImageCodecInfo.GetImageDecoders().First(i => i.FormatID == ImageFormat.Jpeg.Guid);
                 var p = new EncoderParameters(1);
-                p.Param[0] = new EncoderParameter(Encoder.Quality, 90L);
+                p.Param[0] = new EncoderParameter(Encoder.Quality, Math.Max(5, Math.Min(100, quality ?? 90)));
                 thumb.Save(buffer, enc, p);
             }
             else

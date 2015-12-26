@@ -16,6 +16,6 @@ namespace RemoteCache.Web.Models
             background = new SolidBrush(Color.FromArgb(0xFF, Color.FromArgb(color)));
         }
 
-        public abstract Stream GetRect(string imagePath, int width, float minAspect = 1, float maxAspect = 1);
+        public abstract Stream GetRect(int? quality, string imagePath, int width, float minAspect = 1, float maxAspect = 1);
     }
 }
