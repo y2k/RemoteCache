@@ -77,7 +77,7 @@ namespace RemoteCache.Web.Models
             {
                 var enc = ImageCodecInfo.GetImageDecoders().First(i => i.FormatID == ImageFormat.Jpeg.Guid);
                 var p = new EncoderParameters(1);
-                p.Param[0] = new EncoderParameter(Encoder.Quality, Math.Max(5, Math.Min(100, quality ?? 90)));
+                p.Param[0] = new EncoderParameter(Encoder.Quality, (long)Math.Max(5, Math.Min(100, quality ?? 90)));
                 thumb.Save(buffer, enc, p);
             }
             else
