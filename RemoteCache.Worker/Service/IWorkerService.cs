@@ -10,7 +10,7 @@ namespace RemoteCache.Worker.Service
         void AddWork(Uri source);
 
         [OperationContract(Action = "GetPathForImage")]
-        string GetPathForImage(Uri url);
+        string GetPathForImage(Uri url, int preferedWidth, int preferedHeight);
 
         [OperationContract(Action = "GetPathForExtraImage")]
         string GetPathForExtraImage(Uri url, string format);

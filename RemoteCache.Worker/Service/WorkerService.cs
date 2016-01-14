@@ -8,25 +8,26 @@ namespace RemoteCache.Worker.Service
 {
     public class WorkerService : IWorkerService
     {
+        ImageStorage storage = new ImageStorage();
+        
         public void AddWork(Uri source)
         {
             Console.WriteLine("Get new work " + source);
             WorkerManager.Instance.AddWork(source);
         }
 
-        public string GetPathForImage(Uri url)
+        public string GetPathForImage(Uri url, int preferedWidth, int preferedHeight)
         {
-            return GetLayer(url, null);
+            return Validate(storage.GetThubmnail(url, preferedWidth, preferedHeight));
         }
 
         public string GetPathForExtraImage(Uri url, string layer)
         {
-            return GetLayer(url, layer);
+            return Validate(storage.GetPathForImage(url, layer));
         }
 
-        string GetLayer(Uri url, string layer)
+        static string Validate(string file)
         {
-            var file = new ImageStorage().GetPathForImage(url, layer);
             return file != null && File.Exists(file) ? file : null;
         }
 

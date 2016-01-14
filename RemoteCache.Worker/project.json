@@ -1,5 +1,8 @@
 {
     "version": "1.0.0-*",
+    "dependencies": {
+        "BitMiracle.LibJpeg.NET": "1.3.311"
+    },
     "frameworks": {
         "dnx451": {
             "frameworkAssemblies": {

@@ -9,15 +9,18 @@ namespace RemoteCache.Worker.Model
     {
         string cacheRoot = Path.Combine(Directory.GetCurrentDirectory(), "Cache");
 
-        internal string GetPathForImage(Uri url, string layer = null)
+        internal string GetThubmnail(Uri url, int width, int height)
         {
-            var filename = CreateLayerName(CalculateMD5Hash(url.AbsoluteUri), layer);
+            var md5 = CalculateMD5Hash(url);
+            var filename = $"{md5}.thumb.{width}x{height}";
             return Path.Combine(cacheRoot, filename);
         }
 
-        static string CreateLayerName(string id, string layer)
+        internal string GetPathForImage(Uri url, string layer = null)
         {
-            return id + (layer == null ? "" : "." + layer);
+            var md5 = CalculateMD5Hash(url);
+            var filename = md5 + (layer == null ? "" : "." + layer);
+            return Path.Combine(cacheRoot, filename);
         }
 
         internal void Initialize()
@@ -35,11 +38,11 @@ namespace RemoteCache.Worker.Model
             return cacheRoot;
         }
 
-        static string CalculateMD5Hash(string input)
+        static string CalculateMD5Hash(Uri url)
         {
             // step 1, calculate MD5 hash from input
             MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(input);
+            byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(url.AbsoluteUri);
             byte[] hash = md5.ComputeHash(inputBytes);
 
             // step 2, convert byte array to hex string
