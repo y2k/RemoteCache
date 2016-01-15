@@ -8,10 +8,12 @@ namespace RemoteCache.Worker.Model
     class DownloadWorker
     {
         ImageStorage cacheRoot;
+        ImageResizer resizer;
 
-        public DownloadWorker(ImageStorage cacheRoot)
+        public DownloadWorker(ImageStorage cacheRoot, ImageResizer resizer)
         {
             this.cacheRoot = cacheRoot;
+            this.resizer = resizer;
         }
 
         public void Start()
@@ -69,6 +71,8 @@ namespace RemoteCache.Worker.Model
             }
 
             File.Move(tmp, target);
+            
+            resizer.Resize(uri);
         }
 
         string DownloadToTemp(Uri url)

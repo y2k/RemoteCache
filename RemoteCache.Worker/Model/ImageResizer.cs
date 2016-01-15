@@ -1,8 +1,6 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
-using BitMiracle.LibJpeg;
 
 namespace RemoteCache.Worker.Model
 {
@@ -19,33 +17,22 @@ namespace RemoteCache.Worker.Model
 
         public void Resize(Uri url)
         {
-            var file = storage.GetPathForImage(url);
-            var originalBitmap = Bitmap.FromFile(file);
-
+            var originalBitmap = Bitmap.FromFile(storage.GetPathForImage(url));
             var thumbSizes = sizeSelector.ValideSubSizes(originalBitmap.Width, originalBitmap.Height);
+            
             foreach (var size in thumbSizes)
             {
                 var thumb = Convert(originalBitmap, size.Item1, size.Item2);
                 var thumbFile = storage.GetThubmnail(url, size.Item1, size.Item2);
-
-                using (var stream = new FileStream(thumbFile, FileMode.Create))
-                {
-                    JpegImage
-                        .FromBitmap(thumb)
-                        .WriteJpeg(stream, new CompressionParameters { Quality = 50 });
-                }
+                thumb.Save(thumbFile, originalBitmap.RawFormat);
             }
         }
 
-        Bitmap Convert(Image image, int width, float aspect)
+        Bitmap Convert(Image image, int width, int height)
         {
             var fh = (float)width / image.Width * image.Height;
-            var minH = width / aspect;
-            var maxH = width / aspect;
-
-            var height = (int)Math.Max(minH, Math.Min(maxH, fh));
-
             var thumb = new Bitmap(width, height);
+            
             using (var g = NewGraphics(thumb))
             {
                 float s = (float)image.Height / image.Width;

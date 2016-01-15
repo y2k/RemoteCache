@@ -20,7 +20,7 @@ namespace RemoteCache.Web.Models
             try
             {
                 var file = extraLayer == null
-                    ? client.GetPathForImage(new Uri(url))
+                    ? client.GetPathForImage(new Uri(url), int.MaxValue, int.MaxValue)
                     : client.GetPathForExtraImage(new Uri(url), extraLayer);
                 if (file == null)
                     throw new Exception();

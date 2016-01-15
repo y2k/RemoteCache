@@ -5,7 +5,7 @@ namespace RemoteCache.Worker.Model
 {
     class SizeSelector
     {
-        const int MinSize = 16;
+        const int MinSize = 50;
 
         public IEnumerable<Tuple<int, int>> ValideSubSizes(int width, int height)
         {
