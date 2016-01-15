@@ -22,7 +22,7 @@ namespace RemoteCache.Worker.Model
             
             foreach (var size in thumbSizes)
             {
-                var thumb = Convert(originalBitmap, size.width, size.height);
+                var thumb = Convert(originalBitmap, size.Width, size.Height);
                 var thumbFile = storage.GetThubmnail(url, size);
                 thumb.Save(thumbFile, originalBitmap.RawFormat);
             }

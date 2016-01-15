@@ -9,9 +9,9 @@ namespace RemoteCache.Worker.Model
 
         public Size GetBest(Size origin, Size target)
         {
-            return ValideSubSizes(origin.width, origin.height)
+            return ValideSubSizes(origin.Width, origin.Height)
                 .Reverse()
-                .FirstOrDefault(s => s.width >= target.width && s.height >= target.height);
+                .FirstOrDefault(s => s.Width >= target.Width && s.Height >= target.Height);
         }
 
         public IEnumerable<Size> ValideSubSizes(int width, int height)

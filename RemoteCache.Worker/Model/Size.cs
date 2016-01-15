@@ -2,18 +2,20 @@ namespace RemoteCache.Worker.Model
 {
     struct Size
     {
-        public readonly int width;
-        public readonly int height;
+        public bool IsEmpty { get { return Width == 0 && Height == 0; } }
+
+        public readonly int Width;
+        public readonly int Height;
 
         public Size(int width, int height)
         {
-            this.width = width;
-            this.height = height;
+            Width = width;
+            Height = height;
         }
 
         public override string ToString()
         {
-            return $"[{width}x{height}]";
+            return $"[{Width}x{Height}]";
         }
     }
 }

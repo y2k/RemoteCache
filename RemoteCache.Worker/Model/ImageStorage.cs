@@ -21,9 +21,10 @@ namespace RemoteCache.Worker.Model
         {
             var originalSize = imageMeta.Get(GetPathForImage(url));
             var best = sizeSelector.GetBest(originalSize, size);
+            if (best.IsEmpty) return GetPathForImage(url);
 
             var md5 = CalculateMD5Hash(url);
-            var filename = $"{md5}.thumb.{best.width}x{best.height}";
+            var filename = $"{md5}.thumb.{best.Width}x{best.Height}";
             return Path.Combine(cacheRoot, filename);
         }
 
