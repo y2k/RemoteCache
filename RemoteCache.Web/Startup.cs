@@ -1,23 +1,15 @@
-﻿using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Diagnostics.Entity;
+﻿using System;
+using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
+using RemoteCache.Web.Models;
 
 namespace RemoteCacheApi
 {
     public class Startup
     {
-        //  public Startup(IHostingEnvironment env)
-        //  {
-        //      // Setup configuration sources.
-        //      Configuration = new Configuration()
-        //          .AddJsonFile("config.json")
-        //          .AddEnvironmentVariables();
-        //  }
-
         public IConfiguration Configuration { get; set; }
 
         // This method gets called by the runtime.
@@ -25,10 +17,9 @@ namespace RemoteCacheApi
         {
             // Add MVC services to the services container.
             services.AddMvc();
-
-            // Uncomment the following line to add Web API servcies which makes it easier to port Web API 2 controllers.
-            // You need to add Microsoft.AspNet.Mvc.WebApiCompatShim package to project.json
-            // services.AddWebApiConventions();
+            
+            services.AddSingleton<RemoteImageRepository>();
+            services.AddTransient<BaseImageResizer, BitMiracleImageResizer>();
         }
 
         // Configure is called after ConfigureServices is called.

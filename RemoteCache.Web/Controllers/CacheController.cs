@@ -8,14 +8,18 @@ namespace RemoteCache.Web.Controllers
     [Route("[controller]")]
     public class CacheController : Controller
     {
-        RemoteImageRepository imageRepository = new RemoteImageRepository();
-        BaseImageResizer resizer = new BitMiracleImageResizer();
+        [FromServices]
+        public RemoteImageRepository imageRepository { get; set; }
+
+        [FromServices]
+        public BaseImageResizer resizer { get; set; }
 
         [Route("original")]
         public ActionResult Original(string url, string format)
         {
             var path = imageRepository.Get(url, format);
-            if (path == null) {
+            if (path == null)
+            {
                 Response.ContentLength = 0;
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
             }
@@ -28,8 +32,9 @@ namespace RemoteCache.Web.Controllers
         [Route("fit")]
         public ActionResult Fit(string url, int width, int height, string bgColor, int? quality)
         {
-            var path = imageRepository.Get(url, null);
-            if (path == null) {
+            var path = imageRepository.Get(url, width, height);
+            if (path == null)
+            {
                 Response.ContentLength = 0;
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
             }

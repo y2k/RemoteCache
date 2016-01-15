@@ -9,11 +9,13 @@ namespace RemoteCache.Worker.Model
     {
         ImageStorage cacheRoot;
         ImageResizer resizer;
+        ImageMeta imageMeta;
 
-        public DownloadWorker(ImageStorage cacheRoot, ImageResizer resizer)
+        public DownloadWorker(ImageStorage cacheRoot, ImageResizer resizer, ImageMeta imageMeta)
         {
             this.cacheRoot = cacheRoot;
             this.resizer = resizer;
+            this.imageMeta = imageMeta;
         }
 
         public void Start()
@@ -69,9 +71,9 @@ namespace RemoteCache.Worker.Model
                 var pathToMp4 = cacheRoot.GetPathForImage(uri, "mp4");
                 GifConverter.Instance.ConvertToMp4(tmp, pathToMp4, cacheRoot.CreateTempFileInCacheDirectory());
             }
-
             File.Move(tmp, target);
-            
+
+            imageMeta.Save(target);
             resizer.Resize(uri);
         }
 

@@ -7,11 +7,17 @@ namespace RemoteCache.Worker.Model
     {
         const int ImagePerChunk = 100;
         const int MaxThreads = 20;
-
         private const long MaxCacheSize = 20L * 1024 * 1024 * 1024; // 20 GB
+
+        ImageStorage storage;
+        ImageResizer resizer;
+        ImageMeta imageMeta;
 
         WorkerManager()
         {
+            imageMeta = new ImageMeta();
+            storage = new ImageStorage(new SizeSelector(), imageMeta);
+            resizer = new ImageResizer(storage, new SizeSelector());
         }
 
         public static readonly WorkerManager Instance = new WorkerManager();
@@ -21,13 +27,11 @@ namespace RemoteCache.Worker.Model
 
         public void Start()
         {
-            var storage = new ImageStorage();
-            var resizer = new ImageResizer(storage, new SizeSelector());
             storage.Initialize();
-            
+
             new ClearWorker(storage, MaxCacheSize).Start();
             for (int i = 0; i < MaxThreads; i++)
-                new DownloadWorker(storage, resizer).Start();
+                new DownloadWorker(storage, resizer, imageMeta).Start();
         }
 
         readonly object locker = new object();
