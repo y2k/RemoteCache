@@ -9,8 +9,6 @@ namespace RemoteCache.Web.Models
 
         public RemoteImageRepository()
         {
-            Console.WriteLine("RemoteImageRepository.CONSTURUCTOR");
-            
             var workerHost = Environment.GetEnvironmentVariable("WORKER_PORT_8500_TCP_ADDR") ?? "localhost";
             var factory = new ChannelFactory<IWorkerService>(
                               new BasicHttpBinding(),
