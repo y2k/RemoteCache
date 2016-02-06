@@ -3,11 +3,12 @@ FROM microsoft/aspnet:latest
 COPY . /app/
 WORKDIR /app
 
-RUN 	curl -O http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz && \
-	tar xf ffmpeg-release-64bit-static.tar.xz && \
+RUN 	mkdir ffmpeg && \
+	curl -O http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz && \
+	tar xf ffmpeg-release-64bit-static.tar.xz -C ffmpeg --strip-components=1 && \
 	rm ffmpeg-release-64bit-static.tar.xz
 
-ENV REMOTECACHE_FFMPEG_DIR /app/ffmpeg-2.8.4-64bit-static
+ENV REMOTECACHE_FFMPEG_DIR /app/ffmpeg
 ENV ASPNET_ENV Development
 
 RUN 	curl -O "http://nginx.org/keys/nginx_signing.key" && \
