@@ -30,7 +30,7 @@ namespace RemoteCache.Web.Models
         {
             try
             {
-                var file = extraLayer == null
+                var file = width != 0 && height != 0
                     ? client.GetPathForImage(new Uri(url), width, height)
                     : client.GetPathForExtraImage(new Uri(url), extraLayer);
 
