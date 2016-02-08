@@ -10,4 +10,4 @@ docker rmi -f "remote-cache"
 
 docker build --build-arg SSL_DIR=/etc/letsencrypt/live/$2 -t "remote-cache" .
 
-docker run -v /etc/letsencrypt:/etc/letsencrypt -v $(realpath $1):/app/Cache --name "remote-cache" -d -p 8010-8012:8010-8012 "remote-cache"
+docker run -v /etc/letsencrypt:/etc/letsencrypt -v $(realpath $1):/app/Cache --name "remote-cache" -d -p 8010-8012:8010-8012 --restart on-failure "remote-cache"
