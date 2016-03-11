@@ -13,8 +13,8 @@ ENV ASPNET_ENV Development
 
 RUN 	curl -O "http://nginx.org/keys/nginx_signing.key" && \
 	apt-key add nginx_signing.key && \
-	echo "deb http://nginx.org/packages/debian/ wheezy nginx" >> /etc/apt/sources.list && \
-	echo "deb-src http://nginx.org/packages/debian/ wheezy nginx" >> /etc/apt/sources.list && \
+	echo "deb http://nginx.org/packages/mainline/debian/ wheezy nginx" >> /etc/apt/sources.list && \
+	echo "deb-src http://nginx.org/packages/mainline/debian/ wheezy nginx" >> /etc/apt/sources.list && \
 	apt-get -qq update && \
 	apt-get -qqy install nginx && \
 	mkdir -p /tmp/cache
