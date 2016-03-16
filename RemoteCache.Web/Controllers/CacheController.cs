@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using Microsoft.AspNet.Mvc;
 using RemoteCache.Common;
@@ -34,10 +35,16 @@ namespace RemoteCache.Web.Controllers
         public ActionResult Fit(string url, int width, int height, string bgColor, int? quality)
         {
             var normWidth = new WithAnalyzer(width, height);
-            if (!normWidth.IsTwoPower)
+            if (!normWidth.IsNormalized)
             {
-                return RedirectToAction("Fit", new { url, width = normWidth.NormWidth, height = normWidth.NormHeight, bgColor, quality });
+                // Console.WriteLine("REDIRECT [{0}x{1}] -> [{2}x{3}] | ({5}q) {4}", width, height, normWidth.NormWidth, normWidth.NormHeight, url, quality);
+                Response.ContentLength = 0;
+                return RedirectToAction("Fit", new { url, width = normWidth.NormWidth, height = normWidth.NormHeight, bgColor, quality, isNorm = true });
             }
+            // else
+            // {
+            // Console.WriteLine("NO redirect [{0}x{1}] | ({3}q) {2}", width, height, url, quality);
+            // }
 
             var path = imageRepository.Get(url, width, height);
             if (path == null)
