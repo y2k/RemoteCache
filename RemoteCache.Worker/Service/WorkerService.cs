@@ -8,7 +8,7 @@ namespace RemoteCache.Worker.Service
 {
     public class WorkerService : IWorkerService
     {
-        ImageStorage storage = new ImageStorage(new SizeSelector(), new ImageMeta());
+        ImageStorage storage = new ImageStorage();
 
         public void AddWork(Uri source)
         {
@@ -18,7 +18,7 @@ namespace RemoteCache.Worker.Service
 
         public string GetPathForImage(Uri url, int width, int height)
         {
-            return Validate(storage.GetThubmnail(url, new Size(width, height)));
+            return Validate(storage.GetPathForImage(url));
         }
 
         public string GetPathForExtraImage(Uri url, string layer)

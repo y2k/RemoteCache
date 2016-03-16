@@ -8,31 +8,14 @@ namespace RemoteCache.Worker.Model
     class ImageStorage
     {
         string cacheRoot = Path.Combine(Directory.GetCurrentDirectory(), "Cache");
-        SizeSelector sizeSelector;
-        ImageMeta imageMeta;
-
-        public ImageStorage(SizeSelector sizeSelector, ImageMeta imageMeta)
-        {
-            this.sizeSelector = sizeSelector;
-            this.imageMeta = imageMeta;
-        }
-
-        internal string GetThubmnail(Uri url, Size size)
-        {
-            var originalSize = imageMeta.Get(GetPathForImage(url));
-            var best = sizeSelector.GetBest(originalSize, size);
-            if (best.IsEmpty) return GetPathForImage(url);
-
-            var md5 = CalculateMD5Hash(url);
-            var filename = $"{md5}.thumb.{best.Width}x{best.Height}";
-            return Path.Combine(cacheRoot, filename);
-        }
 
         internal string GetPathForImage(Uri url, string layer = null)
         {
             var md5 = CalculateMD5Hash(url);
-            var filename = md5 + (layer == null ? "" : "." + layer);
-            return Path.Combine(cacheRoot, filename);
+            var filename = md5[0] + "/" + md5[1] + md5[2] + "/" + md5.Substring(3) + (layer == null ? "" : "." + layer);
+            var path = Path.Combine(cacheRoot, filename);
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            return path;
         }
 
         internal void Initialize()
