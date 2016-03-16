@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net;
 using Microsoft.AspNet.Mvc;
+using RemoteCache.Common;
 using RemoteCache.Web.Models;
 
 namespace RemoteCache.Web.Controllers
@@ -32,6 +33,12 @@ namespace RemoteCache.Web.Controllers
         [Route("fit")]
         public ActionResult Fit(string url, int width, int height, string bgColor, int? quality)
         {
+            var normWidth = new WithAnalyzer(width, height);
+            if (!normWidth.IsTwoPower)
+            {
+                return RedirectToAction("Fit", new { url, width = normWidth.NormWidth, height = normWidth.NormHeight, bgColor, quality });
+            }
+
             var path = imageRepository.Get(url, width, height);
             if (path == null)
             {
