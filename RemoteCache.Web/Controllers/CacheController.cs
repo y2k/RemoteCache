@@ -43,7 +43,7 @@ namespace RemoteCache.Web.Controllers
             }
             // else
             // {
-            // Console.WriteLine("NO redirect [{0}x{1}] | ({3}q) {2}", width, height, url, quality);
+            //     Console.WriteLine("NO redirect [{0}x{1}] | ({3}q) {2}", width, height, url, quality);
             // }
 
             var path = imageRepository.Get(url, width, height);

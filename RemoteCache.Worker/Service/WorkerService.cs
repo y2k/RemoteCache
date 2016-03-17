@@ -9,6 +9,7 @@ namespace RemoteCache.Worker.Service
     public class WorkerService : IWorkerService
     {
         ImageStorage storage = new ImageStorage();
+        PreFetcher preFetcher = Program.PreFetcher;
 
         public void AddWork(Uri source)
         {
@@ -18,6 +19,7 @@ namespace RemoteCache.Worker.Service
 
         public string GetPathForImage(Uri url, int width, int height)
         {
+            preFetcher.RequestImage(url, width, height);
             return Validate(storage.GetPathForImage(url));
         }
 
