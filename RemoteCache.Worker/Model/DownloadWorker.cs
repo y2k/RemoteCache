@@ -61,18 +61,25 @@ namespace RemoteCache.Worker.Model
             if (File.Exists(target))
                 return;
 
-            var tmp = DownloadToTemp(uri);
-            if (GifConverter.Instance.IsCanConvert(tmp))
+            var tmp = cacheRoot.CreateTempFileInCacheDirectory();
+            try
             {
-                var pathToMp4 = cacheRoot.GetPathForImage(uri, "mp4");
-                GifConverter.Instance.ConvertToMp4(tmp, pathToMp4, cacheRoot.CreateTempFileInCacheDirectory());
+                DownloadTo(uri, tmp);
+                if (GifConverter.Instance.IsCanConvert(tmp))
+                {
+                    var pathToMp4 = cacheRoot.GetPathForImage(uri, "mp4");
+                    GifConverter.Instance.ConvertToMp4(tmp, pathToMp4, cacheRoot.CreateTempFileInCacheDirectory());
+                }
+                File.Move(tmp, target);
             }
-            File.Move(tmp, target);
+            finally
+            {
+                File.Delete(tmp);
+            }
         }
 
-        string DownloadToTemp(Uri url)
+        string DownloadTo(Uri url, string tmp)
         {
-            var tmp = cacheRoot.CreateTempFileInCacheDirectory();
             Console.WriteLine("Download url {0} -> {1}", url, tmp);
 
             var req = (HttpWebRequest)WebRequest.Create(url);
