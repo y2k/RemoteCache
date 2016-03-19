@@ -63,7 +63,7 @@ namespace RemoteCache.Worker.Model
             try
             {
                 var client = new WebClient();
-                client.Headers["UserAgent"] = "PreFetcher/0.1";
+                client.Headers["User-Agent"] = "PreFetcher/0.1";
                 await client.DownloadDataTaskAsync(uri);
             }
             catch (WebException)
