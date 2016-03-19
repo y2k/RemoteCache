@@ -12,7 +12,7 @@ ENV REMOTECACHE_FFMPEG_DIR /app/ffmpeg
 ENV ASPNET_ENV Development
 
 RUN apt-get -qq update && \
-    apt-get -qqy install wget && \
+    apt-get -qqy install wget make && \
     mkdir -p /tmp/cache && \
     mkdir build-nginx && \
     cd build-nginx && \
@@ -29,7 +29,7 @@ RUN apt-get -qq update && \
     rm /etc/nginx/conf/nginx.conf
 
 ARG	SSL_DIR
-RUN	sed "s|___SSL_DIR___|${SSL_DIR}|g" nginx.conf >> /etc/nginx/conf.d/nginx.conf
+RUN	sed "s|___SSL_DIR___|${SSL_DIR}|g" nginx.conf >> /etc/nginx/conf/nginx.conf
 
 EXPOSE 8010 8011 8012
 
