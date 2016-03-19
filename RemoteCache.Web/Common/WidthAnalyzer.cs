@@ -4,7 +4,7 @@ namespace RemoteCache.Common
 {
     class WithAnalyzer
     {
-        const int Base = 4;
+        const int Base = 3;
         
         public bool IsNormalized { get; private set; }
         public int NormWidth { get; private set; }
