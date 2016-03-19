@@ -31,7 +31,7 @@ RUN apt-get -qq update && \
 ARG	SSL_DIR
 RUN	sed "s|___SSL_DIR___|${SSL_DIR}|g" nginx.conf >> /etc/nginx/conf/nginx.conf
 
-EXPOSE 8010 8011 8012
+EXPOSE 8011
 
 RUN echo "#!/bin/bash \n nginx & \n dnx -p RemoteCache.Worker/project.json run & \n dnx -p RemoteCache.Web/project.json web" >> /run.sh && \
 	chmod +x /run.sh
