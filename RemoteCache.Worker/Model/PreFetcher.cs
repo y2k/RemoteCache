@@ -40,17 +40,17 @@ namespace RemoteCache.Worker.Model
             var dataUri = Uri.EscapeDataString(request.link.AbsoluteUri);
             if (request.link.AbsolutePath.Contains("/avatar/user/"))
             {
-                return new int[] { 30, 70, 90, 100 }
+                return new int[] { 32, 48, 64 }
                     .Select(s => new Uri(baseUri, "/Cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
             }
             if (request.link.AbsolutePath.Contains("/avatar/tag/"))
             {
-                return new int[] { 60, 80 }
+                return new int[] { 32, 48, 64 }
                     .Select(s => new Uri(baseUri, "/Cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
             }
             if (request.link.AbsolutePath.Contains("/pics/post/"))
             {
-                return new int[] { 300, 500 }
+                return new int[] { 192, 256, 512 }
                     .Select(s => new { w = s, h = s * request.height / request.width })
                     .Select(s => new Uri(baseUri, "/Cache/fit?url=" + dataUri + "&width=" + s.w + "&height=" + s.h + "&bgColor=ffffff&quality=30&isNorm=True"));
             }

@@ -4,7 +4,7 @@ namespace RemoteCache.Common
 {
     class WithAnalyzer
     {
-        const int Base = 10;
+        const int Base = 4;
         
         public bool IsNormalized { get; private set; }
         public int NormWidth { get; private set; }
@@ -20,7 +20,7 @@ namespace RemoteCache.Common
                 n++;
             }
 
-            NormWidth = t * (int)Math.Pow(10, n);
+            NormWidth = t * (int)Math.Pow(Base, n);
             NormHeight = (int)(NormWidth / ((float)width / height));
             IsNormalized = NormWidth == width;
         }
