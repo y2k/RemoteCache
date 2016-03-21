@@ -4,6 +4,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RemoteCache.Services;
 using RemoteCache.Web.Models;
 
 namespace RemoteCacheApi
@@ -19,7 +20,7 @@ namespace RemoteCacheApi
             services.AddMvc();
             
             services.AddSingleton<RemoteImageRepository>();
-            services.AddTransient<BaseImageResizer, BitMiracleImageResizer>();
+            services.AddTransient<BaseImageResizer, LibGDResizer>();
         }
 
         // Configure is called after ConfigureServices is called.
