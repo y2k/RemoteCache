@@ -1,7 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using RemoteCache.Web.Models;
 
@@ -9,7 +7,6 @@ namespace RemoteCache.Services
 {
     public class LibGDResizer : BaseImageResizer
     {
-        // Func<int, IntPtr, IntPtr> gdImageCreateFromPtr = null;
         Func<int, int, IntPtr> gdImageCreateTrueColor;
         Action<IntPtr, IntPtr, int, int, int, int, int, int, int, int> gdImageCopyResized;
         Action<IntPtr> gdImageDestroy;
