@@ -17,7 +17,7 @@ namespace RemoteCache.Services
 
         byte[] GetRectLinux(int? quality, string imagePath, int width, int height)
         {
-            var srcImage = GDImportLinux.gdImageCreateFromFile(imagePath + ".jpeg");
+            var srcImage = GDImportLinux.gdImageCreateFromFile(imagePath+".png");
             var dstImage = GDImportLinux.gdImageCreateTrueColor(width, height);
 
             var destAspect = (float)width / height;
