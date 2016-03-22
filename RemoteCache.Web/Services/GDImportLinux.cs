@@ -24,10 +24,10 @@ namespace RemoteCache.Services
     /// <summary>
     /// GD APIs
     /// </summary>
-    public class GDImport
+    public class GDImportLinux
     {
-        public const string LIBGD = "libgd.dylib";
-
+        public const string LIBGD = "libgd.so";
+        
         [DllImport(LIBGD)]
         public static extern void gdFree(IntPtr handle);
         [DllImport(LIBGD)]
