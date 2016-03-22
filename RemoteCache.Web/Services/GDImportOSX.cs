@@ -29,6 +29,12 @@ namespace RemoteCache.Services
         public const string LIBGD = "libgd.dylib";
 
         [DllImport(LIBGD)]
+        public static extern IntPtr gdImageCreateFromGifPtr(int size, IntPtr fileHandle);
+        [DllImport(LIBGD)]
+        public static extern IntPtr gdImageCreateFromJpegPtr(int size, IntPtr fileHandle);
+        [DllImport(LIBGD)]
+        public static extern IntPtr gdImageCreateFromPngPtr(int size, IntPtr fileHandle);
+        [DllImport(LIBGD)]
         public static extern void gdFree(IntPtr handle);
         [DllImport(LIBGD)]
         public static extern int gdImageColorAllocate(IntPtr handle, int r, int g, int b);
