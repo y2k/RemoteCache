@@ -43,7 +43,6 @@ namespace RemoteCache.Services
 
             var destAspect = (float)width / height;
             var srcAspect = (float)GetWidth(srcImage) / GetHeight(srcImage);
-            Console.WriteLine("ASPECT {0} | {1}", destAspect, srcAspect);
             if (destAspect > srcAspect)
             {
                 var h = (int)(GetHeight(srcImage) / destAspect);
