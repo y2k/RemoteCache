@@ -16,7 +16,7 @@
         "BitMiracle.LibJpeg.NET": "1.3.311"
     },
     "commands": {
-        "web": "Microsoft.AspNet.Server.Kestrel --server.urls http://*:8501"
+        "web": "Microsoft.AspNet.Server.Kestrel --server.urls http://*:8080"
     },
     "frameworks": {
         "dnx451": {
