@@ -22,9 +22,8 @@ namespace RemoteCache.Worker.Model
 
         public bool IsCanConvert(string path)
         {
-            return false;
-            // using (Image img = Image.FromFile(path))
-            //    return img.RawFormat.Equals(ImageFormat.Gif);
+            using (Image img = Image.FromFile(path))
+               return img.RawFormat.Equals(ImageFormat.Gif);
         }
 
         public void ConvertToMp4(string source, string target, string mp4Temp)
