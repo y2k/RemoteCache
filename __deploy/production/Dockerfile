@@ -1,15 +1,12 @@
-FROM microsoft/aspnet:latest
+FROM kaerus/bootstrap
+
+ENV ASPNET_ENV Development
+ENV REMOTECACHE_FFMPEG_DIR /app/ffmpeg
+ENV OS_TYPE LINUX
+EXPOSE 8081
 
 COPY . /app/
 WORKDIR /app
-
-RUN mkdir ffmpeg && \
-	curl -O http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz && \
-	tar xf ffmpeg-release-64bit-static.tar.xz -C ffmpeg --strip-components=1 && \
-	rm ffmpeg-release-64bit-static.tar.xz
-
-ENV REMOTECACHE_FFMPEG_DIR /app/ffmpeg
-ENV ASPNET_ENV Development
 
 RUN apt-get -qq update && \
     apt-get -qqy install wget make && \
@@ -31,10 +28,6 @@ RUN apt-get -qq update && \
 ARG	SSL_DIR
 RUN	sed "s|___SSL_DIR___|${SSL_DIR}|g" nginx.conf >> /etc/nginx/conf/nginx.conf
 
-EXPOSE 8011
+RUN dnu restore
 
-RUN echo "#!/bin/bash \n nginx & \n dnx -p RemoteCache.Worker/project.json run & \n dnx -p RemoteCache.Web/project.json web" >> /run.sh && \
-	chmod +x /run.sh
-
-RUN ["dnu", "restore"]
-ENTRYPOINT ["/run.sh"]
+ENTRYPOINT ["./run.sh"]

@@ -1,4 +1,10 @@
 #!/bin/bash
 
-dnx -p RemoteCache.Worker/project.json run &
-dnx -p RemoteCache.Web/project.json web
+nginx &
+
+cd RemoteCache.Worker
+dnx run &
+cd ..
+
+cd RemoteCache.Web
+dnx web
