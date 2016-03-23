@@ -42,7 +42,7 @@ namespace RemoteCache.Services
             var srcAspect = (float)GetWidth(srcImage) / GetHeight(srcImage);
             if (destAspect > srcAspect)
             {
-                var h = (int)(GetHeight(srcImage) / destAspect);
+                var h = (int)(GetWidth(srcImage) / destAspect);
                 gdImageCopyResized(
                     dstImage, srcImage,
                     0, 0,
