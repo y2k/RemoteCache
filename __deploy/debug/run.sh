@@ -1,6 +1,8 @@
 #!/bin/bash
 
-dnx -p RemoteCache.Worker/project.json run &
+cd RemoteCache.Worker
+dnx run &
+cd ..
 
 cd RemoteCache.Web
 dnx web

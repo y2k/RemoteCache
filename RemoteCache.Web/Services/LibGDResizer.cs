@@ -101,8 +101,8 @@ namespace RemoteCache.Services
             }
         }
 
-        int GetWidth(IntPtr image) => Marshal.ReadInt32(image, 4);
-        int GetHeight(IntPtr image) => Marshal.ReadInt32(image, 8);
+        int GetWidth(IntPtr image) => Marshal.ReadInt32(image, IntPtr.Size);
+        int GetHeight(IntPtr image) => Marshal.ReadInt32(image, IntPtr.Size + 4);
 
         public static bool IsLinux
         {
