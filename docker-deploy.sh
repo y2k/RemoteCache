@@ -21,7 +21,7 @@ if [ "$1" == "development" ]; then
 	cp __deploy/development/run.sh .
 
 	docker build -t "remote-cache" .
-	docker run -v $CACHE_PATH:/app/Cache --name "remote-cache" -d -p 8011:8080 "remote-cache"
+	docker run -v $CACHE_PATH:/app/RemoteCache.Worker/Cache --name "remote-cache" -d -p 8011:8080 "remote-cache"
 elif [ "$1" == "production" ]; then
 	cp __deploy/production/Dockerfile .
 	cp __deploy/production/run.sh .
