@@ -1,6 +1,6 @@
 if [ "$#" != "2" ]; then
 	if [ "$#" != "3" ]; then
-		echo "docker-deploy.sh <development|production> <cache-dir> <hostname>"
+		echo "docker-deploy.sh <development|production|no-ssl> <cache-dir> <hostname>"
 		exit 1
 	fi
 fi
