@@ -3,7 +3,7 @@ FROM kaerus/bootstrap
 ENV ASPNET_ENV Development
 ENV REMOTECACHE_FFMPEG_DIR /.bootstrap/ffmpeg
 ENV OS_TYPE LINUX
-EXPOSE 8081
+EXPOSE 8081 8082
 
 COPY . /app/
 WORKDIR /app
