@@ -35,7 +35,7 @@ elif [ "$1" == "no-ssl" ]; then
 	cp __deploy/no-ssl/nginx.conf .
 
 	docker build -t "remote-cache" .
-	docker run -v /etc/letsencrypt:/etc/letsencrypt -v $CACHE_PATH:/app/RemoteCache.Worker/Cache --name "remote-cache" -d -p 8011:8081 --restart on-failure "remote-cache"
+	docker run -v /etc/letsencrypt:/etc/letsencrypt -v $CACHE_PATH:/app/RemoteCache.Worker/Cache --name "remote-cache" -d -p 80:8081 --restart on-failure "remote-cache"
 fi
 
 rm -f Dockerfile
