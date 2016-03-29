@@ -27,6 +27,7 @@ namespace RemoteCache.Web.Controllers
             }
 
             var data = new FileStream(path, FileMode.Open);
+            Response.Headers["Cache-Control"] = "public, max-age=2419200";
             Response.ContentLength = data.Length;
             return File(data, "mp4" == format ? "video/mp4" : "image/jpeg");
         }
@@ -56,6 +57,7 @@ namespace RemoteCache.Web.Controllers
             resizer.BackgroundColor = bgColor;
 
             var result = resizer.GetRect(quality, path, width, height);
+            Response.Headers["Cache-Control"] = "public, max-age=2419200";
             Response.ContentLength = result.Length;
             return File(result, "image/jpeg");
         }
