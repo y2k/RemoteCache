@@ -26,7 +26,10 @@ namespace RemoteCache.Web.Controllers
             }
             
             var m = new Regex(@"/Cache/([\w\d/]+\.mp4)").Match(path);
-            if (m.Success) return LocalRedirect("/mp4/" + m.Groups[1].Value);
+            if (m.Success){
+                Response.ContentLength = 0;
+                return LocalRedirect("/mp4/" + m.Groups[1].Value);
+            } 
             
             Response.Headers["Cache-Control"] = "public, max-age=2419200";
             Response.ContentLength = new System.IO.FileInfo(path).Length;
