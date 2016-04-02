@@ -1,6 +1,9 @@
 ﻿using System;
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.FileProviders;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Http;
+using Microsoft.AspNet.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,7 +36,11 @@ namespace RemoteCacheApi
             }
 
             // Add static files to the request pipeline.
-            //app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Environment.GetEnvironmentVariable("REMOTECACHE_CACHE_DIR")),
+                RequestPath = new PathString("/mp4")
+            });
 
             // Add MVC to the request pipeline.
             app.UseMvcWithDefaultRoute();
