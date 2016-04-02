@@ -22,11 +22,13 @@ namespace RemoteCache.Web.Controllers
             if (path == null)
             {
                 Response.ContentLength = 0;
+                Response.Headers["Cache-Control"] = "no-cache";
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
             }
             
             var m = new Regex(@"/Cache/([\w\d/]+\.mp4)").Match(path);
-            if (m.Success){
+            if (m.Success)
+            {
                 Response.ContentLength = 0;
                 return LocalRedirect("/mp4/" + m.Groups[1].Value);
             } 
