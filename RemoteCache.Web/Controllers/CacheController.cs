@@ -1,6 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Net;
+﻿using System.Net;
+using System.Text.RegularExpressions;
 using Microsoft.AspNet.Mvc;
 using RemoteCache.Common;
 using RemoteCache.Web.Models;
@@ -25,11 +24,13 @@ namespace RemoteCache.Web.Controllers
                 Response.ContentLength = 0;
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
             }
-
-            var data = new FileStream(path, FileMode.Open);
+            
+            var m = new Regex(@"/Cache/([\w\d/]+\.mp4)").Match(path);
+            if (m.Success) return LocalRedirect("/mp4/" + m.Groups[1].Value);
+            
             Response.Headers["Cache-Control"] = "public, max-age=2419200";
-            Response.ContentLength = data.Length;
-            return File(data, "mp4" == format ? "video/mp4" : "image/jpeg");
+            Response.ContentLength = new System.IO.FileInfo(path).Length;
+            return PhysicalFile(path, "mp4" == format ? "video/mp4" : "image/jpeg");
         }
 
         [Route("fit")]
