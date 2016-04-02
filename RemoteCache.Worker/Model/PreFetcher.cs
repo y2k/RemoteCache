@@ -9,7 +9,6 @@ namespace RemoteCache.Worker.Model
     class PreFetcher
     {
         Uri baseUri = new Uri("https://api-i-twister.net:8011/");
-        // Uri baseUri = new Uri("http://localhost:8080/");
         HashSet<ImageRequest> queue = new HashSet<ImageRequest>();
 
         internal async void Start()
@@ -41,18 +40,18 @@ namespace RemoteCache.Worker.Model
             if (request.link.AbsolutePath.Contains("/avatar/user/"))
             {
                 return new int[] { 27, 54, 81 }
-                    .Select(s => new Uri(baseUri, "/Cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
+                    .Select(s => new Uri(baseUri, "/cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
             }
             if (request.link.AbsolutePath.Contains("/avatar/tag/"))
             {
                 return new int[] { 27, 54, 81 }
-                    .Select(s => new Uri(baseUri, "/Cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
+                    .Select(s => new Uri(baseUri, "/cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
             }
             if (request.link.AbsolutePath.Contains("/pics/post/"))
             {
                 return new int[] { 162, 243, 486 }
                     .Select(s => new { w = s, h = s * request.height / request.width })
-                    .Select(s => new Uri(baseUri, "/Cache/fit?url=" + dataUri + "&width=" + s.w + "&height=" + s.h + "&bgColor=ffffff&quality=30&isNorm=True"));
+                    .Select(s => new Uri(baseUri, "/cache/fit?url=" + dataUri + "&width=" + s.w + "&height=" + s.h + "&bgColor=ffffff&quality=30&isNorm=True"));
             }
             return new Uri[0];
         }

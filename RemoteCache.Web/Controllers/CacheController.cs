@@ -6,7 +6,7 @@ using RemoteCache.Web.Models;
 
 namespace RemoteCache.Web.Controllers
 {
-    [Route("[controller]")]
+    [Route("cache")]
     public class CacheController : Controller
     {
         [FromServices]
