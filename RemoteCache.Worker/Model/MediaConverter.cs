@@ -23,12 +23,7 @@ namespace RemoteCache.Worker.Model
 
         public bool IsCanConvert(string path)
         {
-            using (var file = new FileStream(path, FileMode.Open)) {
-                var buf = new byte[4];
-                file.Read(buf, 0, buf.Length);
-                if (WebmMagic.SequenceEqual(buf)) return true;
-            }
-            
+            if (IsWebmVideo(path)) return true;
             using (Image img = Image.FromFile(path))
                return img.RawFormat.Equals(ImageFormat.Gif);
         }
@@ -38,12 +33,13 @@ namespace RemoteCache.Worker.Model
             locker.WaitOne();
             try
             {
-                const string args = "-i \"{0}\" -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" -f mp4 \"{1}\"";
+                var preset = IsWebmVideo(source) ? "veryfast" : "medium";
+                var args = $"-i \"{source}\" -preset {preset} -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" -f mp4 \"{mp4Temp}\"";
 
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = GetFFFMPEG(),
-                    Arguments = string.Format(args, source, mp4Temp),
+                    Arguments = args,
                     UseShellExecute = false,
                 };
                 Process.Start(startInfo).WaitForExit();
@@ -53,6 +49,14 @@ namespace RemoteCache.Worker.Model
             finally
             {
                 locker.Release();
+            }
+        }
+
+        bool IsWebmVideo(string path) {
+            using (var file = new FileStream(path, FileMode.Open)) {
+                var buf = new byte[4];
+                file.Read(buf, 0, buf.Length);
+                return WebmMagic.SequenceEqual(buf);
             }
         }
 
