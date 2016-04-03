@@ -8,15 +8,15 @@ using System.Threading;
 
 namespace RemoteCache.Worker.Model
 {
-    public class GifConverter
+    public class MediaConverter
     {
-        public static readonly GifConverter Instance = new GifConverter();
+        public static readonly MediaConverter Instance = new MediaConverter();
 
         const int MaxParallerThread = 2;
 
         Semaphore locker = new Semaphore(MaxParallerThread, MaxParallerThread);
 
-        GifConverter()
+        MediaConverter()
         {
         }
 

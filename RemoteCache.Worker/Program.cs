@@ -11,7 +11,7 @@ namespace RemoteCache.Worker
 		public static void Main() 
 		{
             Console.WriteLine("Program start");
-            GifConverter.Instance.ValidateFFMMPEG();
+            MediaConverter.Instance.ValidateFFMMPEG();
             
             WorkerService.InitializeService();
             Console.WriteLine("Initialize service complete");

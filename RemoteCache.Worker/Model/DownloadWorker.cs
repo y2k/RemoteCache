@@ -65,10 +65,10 @@ namespace RemoteCache.Worker.Model
             try
             {
                 DownloadTo(uri, tmp);
-                if (GifConverter.Instance.IsCanConvert(tmp))
+                if (MediaConverter.Instance.IsCanConvert(tmp))
                 {
                     var pathToMp4 = cacheRoot.GetPathForImage(uri, "mp4");
-                    GifConverter.Instance.ConvertToMp4(tmp, pathToMp4, cacheRoot.CreateTempFileInCacheDirectory());
+                    MediaConverter.Instance.ConvertToMp4(tmp, pathToMp4, cacheRoot.CreateTempFileInCacheDirectory());
                 }
                 File.Move(tmp, target);
             }
