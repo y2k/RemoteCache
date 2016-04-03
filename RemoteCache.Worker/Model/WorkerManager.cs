@@ -5,13 +5,10 @@ namespace RemoteCache.Worker.Model
 {
     class WorkerManager
     {
-        const int ImagePerChunk = 100;
         const int MaxThreads = 20;
         private const long MaxCacheSize = 20L * 1024 * 1024 * 1024; // 20 GB
 
         ImageStorage storage = new ImageStorage();
-
-        public static readonly WorkerManager Instance = new WorkerManager();
 
         readonly Stack<Uri> DownloadUrls = new Stack<Uri>();
         readonly HashSet<Uri> LockedUrls = new HashSet<Uri>();
@@ -56,5 +53,7 @@ namespace RemoteCache.Worker.Model
                 LockedUrls.Remove(url);
             }
         }
+
+        public static readonly WorkerManager Instance = new WorkerManager();
     }
 }

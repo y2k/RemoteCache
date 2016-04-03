@@ -11,6 +11,7 @@ namespace RemoteCache.Worker.Model
     public class MediaConverter
     {
         public static readonly MediaConverter Instance = new MediaConverter();
+        static byte[] WebmMagic = new byte[] { 0x1A, 0x45, 0xDF, 0xA3 };
 
         const int MaxParallerThread = 2;
 
@@ -22,6 +23,12 @@ namespace RemoteCache.Worker.Model
 
         public bool IsCanConvert(string path)
         {
+            using (var file = new FileStream(path, FileMode.Open)) {
+                var buf = new byte[4];
+                file.Read(buf, 0, buf.Length);
+                if (WebmMagic.SequenceEqual(buf)) return true;
+            }
+            
             using (Image img = Image.FromFile(path))
                return img.RawFormat.Equals(ImageFormat.Gif);
         }
