@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -12,6 +10,7 @@ namespace RemoteCache.Worker.Model
     {
         public static readonly MediaConverter Instance = new MediaConverter();
         static byte[] WebmMagic = new byte[] { 0x1A, 0x45, 0xDF, 0xA3 };
+        static byte[] GifMagic = new byte[] { 0x47, 0x49, 0x46, 0x38 };
 
         const int MaxParallerThread = 2;
 
@@ -23,9 +22,7 @@ namespace RemoteCache.Worker.Model
 
         public bool IsCanConvert(string path)
         {
-            if (IsWebmVideo(path)) return true;
-            using (Image img = Image.FromFile(path))
-               return img.RawFormat.Equals(ImageFormat.Gif);
+            return IsGifVideo(path) || IsWebmVideo(path);
         }
 
         public void ConvertToMp4(string source, string target, string mp4Temp)
@@ -54,9 +51,17 @@ namespace RemoteCache.Worker.Model
 
         bool IsWebmVideo(string path) {
             using (var file = new FileStream(path, FileMode.Open)) {
-                var buf = new byte[4];
+                var buf = new byte[WebmMagic.Length];
                 file.Read(buf, 0, buf.Length);
                 return WebmMagic.SequenceEqual(buf);
+            }
+        }
+
+        bool IsGifVideo(string path) {
+            using (var file = new FileStream(path, FileMode.Open)) {
+                var buf = new byte[GifMagic.Length];
+                file.Read(buf, 0, buf.Length);
+                return GifMagic.SequenceEqual(buf);
             }
         }
 

@@ -3,8 +3,7 @@
     "frameworks": {
         "dnx451": {
             "frameworkAssemblies": {
-                "System.ServiceModel": "4.0.0.0",
-                "System.Drawing": "4.0.0.0"
+                "System.ServiceModel": "4.0.0.0"
             }
         }
     }
