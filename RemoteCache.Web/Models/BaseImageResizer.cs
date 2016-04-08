@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 
 namespace RemoteCache.Web.Models
 {
     public abstract class BaseImageResizer {
         
-        protected Brush background { 
+        protected Color background { 
             get {
                 if (BackgroundColor == null) return null;
                 var color = Convert.ToInt32(BackgroundColor, 16);
-                return new SolidBrush(Color.FromArgb(0xFF, Color.FromArgb(color)));
+                return new Color(0xFF, color);
             }
         }
         
