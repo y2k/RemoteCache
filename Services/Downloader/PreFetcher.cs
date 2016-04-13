@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace RemoteCache.Worker.Model
+namespace RemoteCache.Services.Downloader
 {
     class PreFetcher
     {

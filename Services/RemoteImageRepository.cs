@@ -1,19 +1,14 @@
 ﻿using System;
-using System.ServiceModel;
 
-namespace RemoteCache.Web.Models
+namespace RemoteCache.Services
 {
     public class RemoteImageRepository
     {
         IWorkerService client;
 
-        public RemoteImageRepository()
+        public RemoteImageRepository(IWorkerService client)
         {
-            var workerHost = Environment.GetEnvironmentVariable("WORKER_PORT_8500_TCP_ADDR") ?? "localhost";
-            var factory = new ChannelFactory<IWorkerService>(
-                              new BasicHttpBinding(),
-                              new EndpointAddress("http://" + workerHost + ":8500/remote-cache"));
-            client = factory.CreateChannel();
+            this.client = client;
         }
 
         public string Get(string url, int width, int height)

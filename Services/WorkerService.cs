@@ -1,15 +1,23 @@
 ﻿using System;
 using System.IO;
-using System.ServiceModel;
-using System.ServiceModel.Description;
-using RemoteCache.Worker.Model;
+using RemoteCache.Services.Downloader;
 
-namespace RemoteCache.Worker.Service
+namespace RemoteCache.Services
 {
     public class WorkerService : IWorkerService
     {
         ImageStorage storage = new ImageStorage();
-        PreFetcher preFetcher = Program.PreFetcher;
+        PreFetcher preFetcher = new PreFetcher();
+        
+        WorkerService() {
+            Console.WriteLine("Program start");
+            MediaConverter.Instance.ValidateFFMMPEG();
+            
+            WorkerManager.Instance.Start();
+            Console.WriteLine("Initialize downloaders complete");
+            
+            preFetcher.Start();
+        }
 
         public void AddWork(Uri source)
         {
@@ -31,13 +39,6 @@ namespace RemoteCache.Worker.Service
         static string Validate(string file)
         {
             return file != null && File.Exists(file) ? file : null;
-        }
-
-        public static void InitializeService()
-        {
-            var host = new ServiceHost(typeof(WorkerService), new Uri("http://localhost:8500/remote-cache"));
-            host.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = false });
-            host.Open();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RemoteCache.Worker.Model
+namespace RemoteCache.Services.Downloader
 {
     class WorkerManager
     {

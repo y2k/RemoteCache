@@ -2,9 +2,9 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNet.Mvc;
 using RemoteCache.Common;
-using RemoteCache.Web.Models;
+using RemoteCache.Services;
 
-namespace RemoteCache.Web.Controllers
+namespace RemoteCache.Controllers
 {
     [Route("cache")]
     public class CacheController : Controller

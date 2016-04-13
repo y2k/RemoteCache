@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using RemoteCache.Common;
 
-namespace RemoteCache.Web.Models
+namespace RemoteCache.Services
 {
     public abstract class BaseImageResizer {
         

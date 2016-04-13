@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace RemoteCache.Worker.Model
+namespace RemoteCache.Services.Downloader
 {
     public class MediaConverter
     {

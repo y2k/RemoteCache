@@ -1,4 +1,4 @@
-namespace RemoteCache.Web.Models
+namespace RemoteCache.Common
 {
     public class Color
     {
