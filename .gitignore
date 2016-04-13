@@ -28,3 +28,5 @@ RemoteCache.Web/project.lock.json
 .settings
 .vscode
 cache
+project.lock.json
+wwwroot/bin

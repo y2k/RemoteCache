@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RemoteCache.Services;
 using RemoteCache.Web.Models;
+using RemoteCache.Worker.Model;
+using RemoteCache.Worker.Service;
 
 namespace RemoteCacheApi
 {
@@ -29,6 +31,8 @@ namespace RemoteCacheApi
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
+            StartDownload();
+
             // Add the following to the request pipeline only in development environment.
             if (string.Equals(env.EnvironmentName, "Development", StringComparison.OrdinalIgnoreCase))
             {
@@ -45,5 +49,19 @@ namespace RemoteCacheApi
             // Add MVC to the request pipeline.
             app.UseMvcWithDefaultRoute();
         }
+        
+        public static void StartDownload() 
+		{
+            Console.WriteLine("Program start");
+            MediaConverter.Instance.ValidateFFMMPEG();
+            
+            WorkerService.InitializeService();
+            Console.WriteLine("Initialize service complete");
+
+            WorkerManager.Instance.Start();
+            Console.WriteLine("Initialize downloaders complete");
+            
+            new PreFetcher().Start();
+		}
     }
 }
