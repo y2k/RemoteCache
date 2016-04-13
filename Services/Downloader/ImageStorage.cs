@@ -7,7 +7,7 @@ namespace RemoteCache.Services.Downloader
 {
     class ImageStorage
     {
-        string cacheRoot = Path.Combine(Directory.GetCurrentDirectory(), "Cache");
+        string cacheRoot = Path.Combine(Directory.GetCurrentDirectory(), "cache");
 
         internal string GetPathForImage(Uri url, string layer = null)
         {

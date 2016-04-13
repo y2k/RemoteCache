@@ -30,3 +30,4 @@ RemoteCache.Web/project.lock.json
 cache
 project.lock.json
 wwwroot/bin
+bin

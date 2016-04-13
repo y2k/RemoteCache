@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.FileProviders;
 using Microsoft.AspNet.Hosting;
@@ -36,9 +37,11 @@ namespace RemoteCache
             }
 
             // Add static files to the request pipeline.
+            var cacheDir = Environment.GetEnvironmentVariable("REMOTECACHE_CACHE_DIR");
+            Directory.CreateDirectory(cacheDir);
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(Environment.GetEnvironmentVariable("REMOTECACHE_CACHE_DIR")),
+                FileProvider = new PhysicalFileProvider(cacheDir),
                 RequestPath = new PathString("/mp4")
             });
 

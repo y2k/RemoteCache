@@ -8,21 +8,23 @@ namespace RemoteCache.Services
     {
         ImageStorage storage = new ImageStorage();
         PreFetcher preFetcher = new PreFetcher();
-        
-        WorkerService() {
+        WorkerManager workPool = new WorkerManager();
+
+        WorkerService()
+        {
             Console.WriteLine("Program start");
             MediaConverter.Instance.ValidateFFMMPEG();
-            
-            WorkerManager.Instance.Start();
+
+            workPool.Start();
             Console.WriteLine("Initialize downloaders complete");
-            
+
             preFetcher.Start();
         }
 
         public void AddWork(Uri source)
         {
             Console.WriteLine("Get new work " + source);
-            WorkerManager.Instance.AddWork(source);
+            workPool.AddWork(source);
         }
 
         public string GetPathForImage(Uri url, int width, int height)

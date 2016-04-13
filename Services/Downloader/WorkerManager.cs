@@ -5,7 +5,7 @@ namespace RemoteCache.Services.Downloader
 {
     class WorkerManager
     {
-        const int MaxThreads = 20;
+        const int MaxThreads = 10;
         private const long MaxCacheSize = 20L * 1024 * 1024 * 1024; // 20 GB
 
         ImageStorage storage = new ImageStorage();
@@ -19,7 +19,7 @@ namespace RemoteCache.Services.Downloader
 
             new ClearWorker(storage, MaxCacheSize).Start();
             for (int i = 0; i < MaxThreads; i++)
-                new DownloadWorker(storage).Start();
+                new DownloadWorker(storage, this).Start();
         }
 
         readonly object locker = new object();
@@ -53,7 +53,5 @@ namespace RemoteCache.Services.Downloader
                 LockedUrls.Remove(url);
             }
         }
-
-        public static readonly WorkerManager Instance = new WorkerManager();
     }
 }

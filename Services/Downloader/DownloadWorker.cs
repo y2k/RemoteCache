@@ -8,10 +8,12 @@ namespace RemoteCache.Services.Downloader
     class DownloadWorker
     {
         ImageStorage cacheRoot;
+        WorkerManager workPool;
 
-        public DownloadWorker(ImageStorage cacheRoot)
+        public DownloadWorker(ImageStorage cacheRoot, WorkerManager workPool)
         {
             this.cacheRoot = cacheRoot;
+            this.workPool = workPool;
         }
 
         public void Start()
@@ -34,7 +36,7 @@ namespace RemoteCache.Services.Downloader
 
         void Execute()
         {
-            var url = WorkerManager.Instance.RegisterNewWork();
+            var url = workPool.RegisterNewWork();
 
             if (url == null)
                 Thread.Sleep(1000);
@@ -95,7 +97,7 @@ namespace RemoteCache.Services.Downloader
 
         void CompleteTask(Uri url)
         {
-            WorkerManager.Instance.UnregisterWork(url);
+            workPool.UnregisterWork(url);
         }
     }
 }
