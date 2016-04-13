@@ -7,30 +7,33 @@ namespace RemoteCache.Services.Downloader
 {
     class ImageStorage
     {
-        string cacheRoot = Path.Combine(Directory.GetCurrentDirectory(), "cache");
+        public static string CacheRoot
+        {
+            get { return Path.Combine(Directory.GetCurrentDirectory(), "cache"); }
+        }
 
         internal string GetPathForImage(Uri url, string layer = null)
         {
             var md5 = CalculateMD5Hash(url);
             var filename = md5[0] + "/" + md5[1] + md5[2] + "/" + md5.Substring(3) + (layer == null ? "" : "." + layer);
-            var path = Path.Combine(cacheRoot, filename);
+            var path = Path.Combine(CacheRoot, filename);
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             return path;
         }
 
         internal void Initialize()
         {
-            Directory.CreateDirectory(cacheRoot);
+            Directory.CreateDirectory(CacheRoot);
 
             Console.WriteLine("START clear temp files");
-            foreach (var f in Directory.GetFiles(cacheRoot, "*.tmp"))
+            foreach (var f in Directory.GetFiles(CacheRoot, "*.tmp"))
                 File.Delete(f);
             Console.WriteLine("END clear temp files");
         }
 
         internal string GetRootDirectory()
         {
-            return cacheRoot;
+            return CacheRoot;
         }
 
         static string CalculateMD5Hash(Uri url)
@@ -51,7 +54,7 @@ namespace RemoteCache.Services.Downloader
 
         internal string CreateTempFileInCacheDirectory()
         {
-            return Path.Combine(cacheRoot, Guid.NewGuid() + ".tmp");
+            return Path.Combine(CacheRoot, Guid.NewGuid() + ".tmp");
         }
     }
 }

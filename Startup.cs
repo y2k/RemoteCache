@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RemoteCache.Services;
+using RemoteCache.Services.Downloader;
 
 namespace RemoteCache
 {
@@ -37,12 +38,11 @@ namespace RemoteCache
             }
 
             // Add static files to the request pipeline.
-            var cacheDir = Environment.GetEnvironmentVariable("REMOTECACHE_CACHE_DIR");
-            Directory.CreateDirectory(cacheDir);
+            Directory.CreateDirectory(ImageStorage.CacheRoot);
             app.UseStaticFiles(new StaticFileOptions()
             {
-                FileProvider = new PhysicalFileProvider(cacheDir),
-                RequestPath = new PathString("/mp4")
+                FileProvider = new PhysicalFileProvider(ImageStorage.CacheRoot),
+                RequestPath = new PathString("/mp4"),
             });
 
             // Add MVC to the request pipeline.
