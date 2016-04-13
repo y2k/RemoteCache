@@ -10,7 +10,7 @@ namespace RemoteCache.Services
         PreFetcher preFetcher = new PreFetcher();
         WorkerManager workPool = new WorkerManager();
 
-        WorkerService()
+        public WorkerService()
         {
             Console.WriteLine("Program start");
             MediaConverter.Instance.ValidateFFMMPEG();

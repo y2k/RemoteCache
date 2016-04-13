@@ -26,7 +26,7 @@ namespace RemoteCache.Controllers
                 return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
             }
             
-            var m = new Regex(@"/Cache/([\w\d/]+\.mp4)").Match(path);
+            var m = new Regex(@"/cache/([\w\d/]+\.mp4)").Match(path);
             if (m.Success)
             {
                 Response.ContentLength = 0;
