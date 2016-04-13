@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Http;
 
 namespace RemoteCache.Services.Downloader
 {
     class PreFetcher
     {
+        private const string UserAgent = "PreFetcher/0.1";
+        private const int RestTime = 30 * 1000;
+        private const int QueueCapacity = 10000;
+
         HashSet<ImageRequest> queue = new HashSet<ImageRequest>();
 
         internal async void Start()
@@ -19,7 +24,7 @@ namespace RemoteCache.Services.Downloader
                     await DownloadDataTaskAsync(uri);
                     await Task.Delay(1000);
                 }
-                await Task.Delay(30 * 1000);
+                await Task.Delay(RestTime);
             }
         }
 
@@ -61,7 +66,7 @@ namespace RemoteCache.Services.Downloader
             try
             {
                 var client = new WebClient();
-                client.Headers["User-Agent"] = "PreFetcher/0.1";
+                client.Headers["User-Agent"] = UserAgent;
                 await client.DownloadDataTaskAsync(uri);
             }
             catch (WebException)
@@ -70,17 +75,18 @@ namespace RemoteCache.Services.Downloader
             }
         }
 
-        internal void RequestImage(Uri url, int requestWidth, int requestHeight, Uri requestUri)
+        internal void RequestImage(Uri url, int requestWidth, int requestHeight, HttpRequest request)
         {
+            if (request.Headers["User-Agent"] == UserAgent) return;
             lock (queue)
             {
-                if (queue.Count < 10000)
+                if (queue.Count < QueueCapacity)
                     queue.Add(new ImageRequest
                     {
                         link = url,
                         width = requestWidth,
                         height = requestHeight,
-                        requestUri = requestUri,
+                        requestUri = new Uri($"{request.Scheme}://{request.Host}"),
                     });
             }
         }

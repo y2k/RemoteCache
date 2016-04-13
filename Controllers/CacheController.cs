@@ -53,8 +53,8 @@ namespace RemoteCache.Controllers
             {
                 Console.WriteLine("NO redirect [{0}x{1}] | ({3}q) {2}", width, height, url, quality);
             }
-
-            var path = client.GetPathForImage(new Uri(url), width, height, new Uri($"{Request.Scheme}://{Request.Host}"));
+            
+            var path = client.GetPathForImage(new Uri(url), width, height, Request);
             if (path == null)
             {
                 Response.ContentLength = 0;

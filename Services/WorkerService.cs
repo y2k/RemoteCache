@@ -22,9 +22,9 @@ namespace RemoteCache.Services
             preFetcher.Start();
         }
 
-        public string GetPathForImage(Uri url, int width, int height, Uri requestUri)
+        public string GetPathForImage(Uri url, int width, int height, HttpRequest request)
         {
-            preFetcher.RequestImage(url, width, height, requestUri);
+            preFetcher.RequestImage(url, width, height, request);
             return Validate(url, storage.GetPathForImage(url));
         }
 
