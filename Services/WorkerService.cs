@@ -21,26 +21,26 @@ namespace RemoteCache.Services
             preFetcher.Start();
         }
 
-        public void AddWork(Uri source)
-        {
-            Console.WriteLine("Get new work " + source);
-            workPool.AddWork(source);
-        }
-
         public string GetPathForImage(Uri url, int width, int height)
         {
             preFetcher.RequestImage(url, width, height);
-            return Validate(storage.GetPathForImage(url));
+            return Validate(url, storage.GetPathForImage(url));
         }
 
         public string GetPathForExtraImage(Uri url, string layer)
         {
-            return Validate(storage.GetPathForImage(url, layer));
+            return Validate(url, storage.GetPathForImage(url, layer));
         }
 
-        static string Validate(string file)
+        string Validate(Uri source, string file)
         {
-            return file != null && File.Exists(file) ? file : null;
+            var result = file != null && File.Exists(file) ? file : null;
+            if (result == null)
+            {
+                Console.WriteLine("Get new work " + source);
+                workPool.AddWork(source);
+            }
+            return result;
         }
     }
 }

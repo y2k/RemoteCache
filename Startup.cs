@@ -24,7 +24,6 @@ namespace RemoteCache
             services.AddMvc();
             
             services.AddSingleton<IWorkerService, WorkerService>();
-            services.AddSingleton<RemoteImageRepository>();
             services.AddTransient<BaseImageResizer, LibGDResizer>();
         }
 
