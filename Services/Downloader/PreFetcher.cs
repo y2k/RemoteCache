@@ -8,7 +8,6 @@ namespace RemoteCache.Services.Downloader
 {
     class PreFetcher
     {
-        Uri baseUri = new Uri("https://api-i-twister.net:8011/");
         HashSet<ImageRequest> queue = new HashSet<ImageRequest>();
 
         internal async void Start()
@@ -40,18 +39,18 @@ namespace RemoteCache.Services.Downloader
             if (request.link.AbsolutePath.Contains("/avatar/user/"))
             {
                 return new int[] { 27, 54, 81 }
-                    .Select(s => new Uri(baseUri, "/cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
+                    .Select(s => new Uri(request.requestUri, "/cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
             }
             if (request.link.AbsolutePath.Contains("/avatar/tag/"))
             {
                 return new int[] { 27, 54, 81 }
-                    .Select(s => new Uri(baseUri, "/cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
+                    .Select(s => new Uri(request.requestUri, "/cache/fit?url=" + dataUri + "&width=" + s + "&height=" + s + "&bgColor=ffffff&quality=30&isNorm=True"));
             }
             if (request.link.AbsolutePath.Contains("/pics/post/"))
             {
                 return new int[] { 162, 243, 486 }
                     .Select(s => new { w = s, h = s * request.height / request.width })
-                    .Select(s => new Uri(baseUri, "/cache/fit?url=" + dataUri + "&width=" + s.w + "&height=" + s.h + "&bgColor=ffffff&quality=30&isNorm=True"));
+                    .Select(s => new Uri(request.requestUri, "/cache/fit?url=" + dataUri + "&width=" + s.w + "&height=" + s.h + "&bgColor=ffffff&quality=30&isNorm=True"));
             }
             return new Uri[0];
         }
@@ -71,12 +70,18 @@ namespace RemoteCache.Services.Downloader
             }
         }
 
-        internal void RequestImage(Uri url, int requestWidth, int requestHeight)
+        internal void RequestImage(Uri url, int requestWidth, int requestHeight, Uri requestUri)
         {
             lock (queue)
             {
                 if (queue.Count < 10000)
-                    queue.Add(new ImageRequest { link = url, width = requestWidth, height = requestHeight });
+                    queue.Add(new ImageRequest
+                    {
+                        link = url,
+                        width = requestWidth,
+                        height = requestHeight,
+                        requestUri = requestUri,
+                    });
             }
         }
 
@@ -85,6 +90,7 @@ namespace RemoteCache.Services.Downloader
             internal Uri link;
             internal int width;
             internal int height;
+            internal Uri requestUri;
         }
     }
 }

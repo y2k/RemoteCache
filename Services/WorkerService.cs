@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.AspNet.Http;
 using RemoteCache.Services.Downloader;
 
 namespace RemoteCache.Services
@@ -21,9 +22,9 @@ namespace RemoteCache.Services
             preFetcher.Start();
         }
 
-        public string GetPathForImage(Uri url, int width, int height)
+        public string GetPathForImage(Uri url, int width, int height, Uri requestUri)
         {
-            preFetcher.RequestImage(url, width, height);
+            preFetcher.RequestImage(url, width, height, requestUri);
             return Validate(url, storage.GetPathForImage(url));
         }
 

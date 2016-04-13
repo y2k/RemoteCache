@@ -45,16 +45,16 @@ namespace RemoteCache.Controllers
             var normWidth = new WithAnalyzer(width, height);
             if (!normWidth.IsNormalized)
             {
-                // Console.WriteLine("REDIRECT [{0}x{1}] -> [{2}x{3}] | ({5}q) {4}", width, height, normWidth.NormWidth, normWidth.NormHeight, url, quality);
+                Console.WriteLine("REDIRECT [{0}x{1}] -> [{2}x{3}] | ({5}q) {4}", width, height, normWidth.NormWidth, normWidth.NormHeight, url, quality);
                 Response.ContentLength = 0;
                 return RedirectToAction("Fit", new { url, width = normWidth.NormWidth, height = normWidth.NormHeight, bgColor, quality, isNorm = true });
             }
-            // else
-            // {
-            //     Console.WriteLine("NO redirect [{0}x{1}] | ({3}q) {2}", width, height, url, quality);
-            // }
+            else
+            {
+                Console.WriteLine("NO redirect [{0}x{1}] | ({3}q) {2}", width, height, url, quality);
+            }
 
-            var path = client.GetPathForImage(new Uri(url), width, height);
+            var path = client.GetPathForImage(new Uri(url), width, height, new Uri($"{Request.Scheme}://{Request.Host}"));
             if (path == null)
             {
                 Response.ContentLength = 0;
