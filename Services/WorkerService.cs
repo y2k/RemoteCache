@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Http;
 using RemoteCache.Services.Downloader;
 
 namespace RemoteCache.Services

@@ -85,10 +85,10 @@ namespace RemoteCache.Services.Downloader
             Console.WriteLine("Download url {0} -> {1}", url, tmp);
 
             var req = (HttpWebRequest)WebRequest.Create(url);
-            req.Referer = url.AbsoluteUri;
-            req.UserAgent = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.76 Safari/537.36 OPR/16.0.1196.80";
+            req.Headers["Referer"] = url.AbsoluteUri;
+            req.Headers["UserAgent"] = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.76 Safari/537.36 OPR/16.0.1196.80";
 
-            var resp = (HttpWebResponse)req.GetResponse();
+            var resp = (HttpWebResponse)req.GetResponseAsync().Result;
             using (var i = resp.GetResponseStream())
             using (var o = new FileStream(tmp, FileMode.Create))
                 i.CopyTo(o);

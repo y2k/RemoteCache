@@ -49,16 +49,20 @@ namespace RemoteCache.Services.Downloader
             }
         }
 
-        bool IsWebmVideo(string path) {
-            using (var file = new FileStream(path, FileMode.Open)) {
+        bool IsWebmVideo(string path)
+        {
+            using (var file = new FileStream(path, FileMode.Open))
+            {
                 var buf = new byte[WebmMagic.Length];
                 file.Read(buf, 0, buf.Length);
                 return WebmMagic.SequenceEqual(buf);
             }
         }
 
-        bool IsGifVideo(string path) {
-            using (var file = new FileStream(path, FileMode.Open)) {
+        bool IsGifVideo(string path)
+        {
+            using (var file = new FileStream(path, FileMode.Open))
+            {
                 var buf = new byte[GifMagic.Length];
                 file.Read(buf, 0, buf.Length);
                 return GifMagic.SequenceEqual(buf);
@@ -80,20 +84,11 @@ namespace RemoteCache.Services.Downloader
 
         class PlatformExt
         {
-            static readonly PlatformID[] Wins = new PlatformID[]
-            {
-                PlatformID.Win32NT,
-                PlatformID.Win32S,
-                PlatformID.Win32Windows,
-                PlatformID.WinCE,
-                PlatformID.Xbox
-            };
-
             public string Ext { get { return IsWindows() ? ".exe" : ""; } }
 
             static bool IsWindows()
             {
-                return Wins.Contains(Environment.OSVersion.Platform);
+                return Environment.GetEnvironmentVariable("REMOTECACHE_OS")?.Contains("win") ?? false;
             }
         }
     }

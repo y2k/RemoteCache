@@ -1,27 +1,18 @@
-// using System;
-// using RemoteCache.Worker.Model;
-// using RemoteCache.Worker.Service;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
-// namespace RemoteCache.Worker
-// {
-// 	public class Program
-// 	{
-//         internal static PreFetcher PreFetcher = new PreFetcher();
-        
-// 		public static void Main() 
-// 		{
-//             Console.WriteLine("Program start");
-//             MediaConverter.Instance.ValidateFFMMPEG();
-            
-//             WorkerService.InitializeService();
-//             Console.WriteLine("Initialize service complete");
-
-//             WorkerManager.Instance.Start();
-//             Console.WriteLine("Initialize downloaders complete");
-            
-//             PreFetcher.Start();
-
-//             System.Threading.Thread.Sleep(-1);
-// 		}
-// 	}
-// }
+namespace RemoteCache
+{
+    public class Program
+    {
+        public static void Main()
+        {
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseStartup<Startup>()
+                .Build();
+            host.Run();
+        }
+    }
+}

@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace RemoteCache.Services.Downloader
 {
@@ -65,9 +66,9 @@ namespace RemoteCache.Services.Downloader
             // Console.WriteLine("[PREFETCHER]: fetch " + uri);
             try
             {
-                var client = new WebClient();
-                client.Headers["User-Agent"] = UserAgent;
-                await client.DownloadDataTaskAsync(uri);
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Add("User-Agent", UserAgent);
+                await client.GetByteArrayAsync(uri);
             }
             catch (WebException)
             {

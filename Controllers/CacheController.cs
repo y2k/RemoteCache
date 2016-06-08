@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Text.RegularExpressions;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using RemoteCache.Common;
 using RemoteCache.Services;
 
@@ -10,11 +10,15 @@ namespace RemoteCache.Controllers
     [Route("cache")]
     public class CacheController : Controller
     {
-        [FromServices]
-        public IWorkerService client { get; set; }
+        IWorkerService client;
 
-        [FromServices]
-        public BaseImageResizer resizer { get; set; }
+        BaseImageResizer resizer;
+
+        public CacheController([FromServices] IWorkerService client, [FromServices] BaseImageResizer resizer)
+        {
+            this.client = client;
+            this.resizer = resizer;
+        }
 
         [Route("original")]
         public ActionResult Original(string url, string format)
@@ -24,7 +28,7 @@ namespace RemoteCache.Controllers
             {
                 Response.ContentLength = 0;
                 Response.Headers["Cache-Control"] = "no-cache";
-                return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+                return new StatusCodeResult((int)HttpStatusCode.NotFound);
             }
 
             var m = new Regex(@"/cache/([\w\d/]+\.mp4)").Match(path);
@@ -53,12 +57,12 @@ namespace RemoteCache.Controllers
             {
                 Console.WriteLine("NO redirect [{0}x{1}] | ({3}q) {2}", width, height, url, quality);
             }
-            
-            var path = client.GetPathForImage(new Uri(url), width, height, Request);
+
+            var path = client.GetPathForImage(new Uri(url), width, height, this.Request);
             if (path == null)
             {
                 Response.ContentLength = 0;
-                return new HttpStatusCodeResult((int)HttpStatusCode.NotFound);
+                return new StatusCodeResult((int)HttpStatusCode.NotFound);
             }
 
             resizer.BackgroundColor = bgColor;

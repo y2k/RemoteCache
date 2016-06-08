@@ -84,10 +84,10 @@ namespace RemoteCache.Services
         public static extern void gdImageSetAntiAliased(IntPtr handle, int c);
         [DllImport(LIBGD)]
         public static extern void gdImageSetAntiAliasedDontBlend(IntPtr handle, int c);
-        [DllImport(LIBGD)]
-        public static extern void gdImageSetBrush(IntPtr handle, HandleRef brushHandle);
-        [DllImport(LIBGD)]
-        public static extern void gdImageSetTile(IntPtr handle, HandleRef tileHandle);
+        // [DllImport(LIBGD)]
+        // public static extern void gdImageSetBrush(IntPtr handle, HandleRef brushHandle);
+        // [DllImport(LIBGD)]
+        // public static extern void gdImageSetTile(IntPtr handle, HandleRef tileHandle);
         [DllImport(LIBGD)]
         public static extern void gdImageSetStyle(IntPtr handle, int[] style, int styleLength);
         [DllImport(LIBGD)]
@@ -106,14 +106,14 @@ namespace RemoteCache.Services
         public static extern IntPtr gdFontGetGiant();
         [DllImport(LIBGD)]
         public static extern IntPtr gdFontGetTiny();
-        [DllImport(LIBGD)]
-        public static extern void gdImageChar(IntPtr handle, HandleRef fontHandle, int x, int y, int c, int color);
-        [DllImport(LIBGD)]
-        public static extern void gdImageCharUp(IntPtr handle, HandleRef fontHandle, int x, int y, int c, int color);
-        [DllImport(LIBGD)]
-        public static extern void gdImageString(IntPtr handle, HandleRef fontHandle, int x, int y, string message, int color);
-        [DllImport(LIBGD)]
-        public static extern void gdImageStringUp(IntPtr handle, HandleRef fontHandle, int x, int y, string message, int color);
+        // [DllImport(LIBGD)]
+        // public static extern void gdImageChar(IntPtr handle, HandleRef fontHandle, int x, int y, int c, int color);
+        // [DllImport(LIBGD)]
+        // public static extern void gdImageCharUp(IntPtr handle, HandleRef fontHandle, int x, int y, int c, int color);
+        // [DllImport(LIBGD)]
+        // public static extern void gdImageString(IntPtr handle, HandleRef fontHandle, int x, int y, string message, int color);
+        // [DllImport(LIBGD)]
+        // public static extern void gdImageStringUp(IntPtr handle, HandleRef fontHandle, int x, int y, string message, int color);
         [DllImport(LIBGD)]
         public static extern string gdImageStringFT(IntPtr handle, int[] brect, int fg, string fontname, double ptsize, double angle, int x, int y, string message);
         [DllImport(LIBGD)]
