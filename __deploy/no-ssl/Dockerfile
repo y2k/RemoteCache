@@ -10,6 +10,6 @@ WORKDIR /app
 
 COPY nginx.conf /etc/nginx/conf/nginx.conf
 
-RUN dnu restore
+RUN dotnet restore
 
 ENTRYPOINT ["./run.sh"]
