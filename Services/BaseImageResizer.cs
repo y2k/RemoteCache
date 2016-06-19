@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using RemoteCache.Common;
 
 namespace RemoteCache.Services
@@ -15,6 +16,8 @@ namespace RemoteCache.Services
         }
         
         public string BackgroundColor { get; set; }
+
+        public abstract Task<Stream> GetRectAsync(int? quality, string imagePath, int width, int height);
 
         public abstract Stream GetRect(int? quality, string imagePath, int width, int height);
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RemoteCache.Common;
 using RemoteCache.Services;
@@ -44,7 +45,7 @@ namespace RemoteCache.Controllers
         }
 
         [Route("fit")]
-        public ActionResult Fit(string url, int width, int height, string bgColor, int? quality)
+        public async Task<ActionResult> Fit(string url, int width, int height, string bgColor, int? quality)
         {
             var normWidth = new WithAnalyzer(width, height);
             if (!normWidth.IsNormalized)
@@ -67,7 +68,7 @@ namespace RemoteCache.Controllers
 
             resizer.BackgroundColor = bgColor;
 
-            var result = resizer.GetRect(quality, path, width, height);
+            var result = await resizer.GetRectAsync(quality, path, width, height);
             Response.Headers["Cache-Control"] = "public, max-age=2419200";
             Response.ContentLength = result.Length;
             return File(result, "image/jpeg");

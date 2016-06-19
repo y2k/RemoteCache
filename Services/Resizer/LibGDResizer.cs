@@ -1,11 +1,17 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace RemoteCache.Services.Resizer
 {
     public class LibGDResizer : BaseImageResizer
     {
+        public override Task<Stream> GetRectAsync(int? quality, string imagePath, int width, int height)
+        {
+            return Task.Run(() => GetRect(quality, imagePath, width, height));
+        }
+
         public override Stream GetRect(int? quality, string imagePath, int width, int height)
         {
             var srcImage = CreateImageFromBytes(File.ReadAllBytes(imagePath));
@@ -45,7 +51,7 @@ namespace RemoteCache.Services.Resizer
             return new MemoryStream(data);
         }
 
-        private IntPtr CreateImageFromBytes(byte[] data)
+        IntPtr CreateImageFromBytes(byte[] data)
         {
             Func<int, IntPtr, IntPtr> gdImageCreateFromPtr = null;
             if (data[0] == 0xFF) gdImageCreateFromPtr = GDImport.gdImageCreateFromJpegPtr;
