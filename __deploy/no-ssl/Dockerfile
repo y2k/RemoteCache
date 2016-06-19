@@ -1,6 +1,6 @@
-FROM kaerus/bootstrap
+FROM microsoft/dotnet:latest
 
-ENV ASPNET_ENV Development
+ENV ASPNETCORE_ENVIRONMENT Development
 ENV REMOTECACHE_FFMPEG_DIR /.bootstrap/ffmpeg
 ENV OS_TYPE LINUX
 EXPOSE 8081

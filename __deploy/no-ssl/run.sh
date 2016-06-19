@@ -2,4 +2,4 @@
 
 nginx &
 
-dnx web
+dotnet run
