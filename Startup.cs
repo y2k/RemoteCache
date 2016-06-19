@@ -9,6 +9,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using RemoteCache.Services;
 using RemoteCache.Services.Downloader;
+using RemoteCache.Services.Resizer;
 
 namespace RemoteCache
 {

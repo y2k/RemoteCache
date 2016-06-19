@@ -19,15 +19,15 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 using System;
 using System.Runtime.InteropServices;
 
-namespace RemoteCache.Services
+namespace RemoteCache.Services.Resizer
 {
     /// <summary>
     /// GD APIs
     /// </summary>
-    public class GDImportLinux
+    public class GDImport
     {
-        public const string LIBGD = "libgd.so";
-        
+        public const string LIBGD = "libgd";
+
         [DllImport(LIBGD)]
         public static extern IntPtr gdImageCreateFromGifPtr(int size, IntPtr fileHandle);
         [DllImport(LIBGD)]
