@@ -26,7 +26,7 @@ namespace RemoteCache.Services.Resizer
     /// </summary>
     public class GDImport
     {
-        public const string LIBGD = "libgd";
+        public const string LIBGD = "libgd.so";
 
         [DllImport(LIBGD)]
         public static extern IntPtr gdImageCreateFromGifPtr(int size, IntPtr fileHandle);
