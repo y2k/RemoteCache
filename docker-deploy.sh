@@ -24,7 +24,7 @@ if [ "$1" == "no-ssl" ]; then
 	docker build -t "remote-cache" .
 	docker run -v /etc/letsencrypt:/etc/letsencrypt -v $CACHE_PATH:/app/cache --name "remote-cache" -d -p 80:8081 --restart on-failure "remote-cache"
 else
-	echo "Unsuported target $1"
+	echo "Unsuported target '$1''"
 	exit 1
 fi
 
