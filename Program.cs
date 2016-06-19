@@ -7,12 +7,12 @@ namespace RemoteCache
     {
         public static void Main()
         {
-            var host = new WebHostBuilder()
+            new WebHostBuilder()
+                .UseUrls("http://:5000/")
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
-                .Build();
-            host.Run();
+                .Build().Run();
         }
     }
 }
