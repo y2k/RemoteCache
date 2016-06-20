@@ -8,10 +8,16 @@ namespace RemoteCache.Services.Downloader
         const int MaxThreads = 10;
         private const long MaxCacheSize = 20L * 1024 * 1024 * 1024; // 20 GB
 
-        ImageStorage storage = new ImageStorage();
-
+        readonly ImageStorage storage;
         readonly Stack<Uri> DownloadUrls = new Stack<Uri>();
         readonly HashSet<Uri> LockedUrls = new HashSet<Uri>();
+
+        readonly object locker = new object();
+
+        public WorkerManager(ImageStorage storage)
+        {
+            this.storage = storage;
+        }
 
         public void Start()
         {
@@ -22,14 +28,9 @@ namespace RemoteCache.Services.Downloader
                 new DownloadWorker(storage, this).Start();
         }
 
-        readonly object locker = new object();
-
         public void AddWork(Uri source)
         {
-            lock (locker)
-            {
-                DownloadUrls.Push(source);
-            }
+            lock (locker) { DownloadUrls.Push(source); }
         }
 
         public Uri RegisterNewWork()
@@ -39,8 +40,7 @@ namespace RemoteCache.Services.Downloader
                 while (DownloadUrls.Count > 0)
                 {
                     var url = DownloadUrls.Pop();
-                    if (LockedUrls.Add(url))
-                        return url;
+                    if (LockedUrls.Add(url)) return url;
                 }
                 return null;
             }
@@ -48,10 +48,7 @@ namespace RemoteCache.Services.Downloader
 
         public void UnregisterWork(Uri url)
         {
-            lock (locker)
-            {
-                LockedUrls.Remove(url);
-            }
+            lock (locker) { LockedUrls.Remove(url); }
         }
     }
 }

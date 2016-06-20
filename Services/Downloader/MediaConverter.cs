@@ -25,7 +25,7 @@ namespace RemoteCache.Services.Downloader
             return IsGifVideo(path) || IsWebmVideo(path);
         }
 
-        public async Task ConvertToMp42(string source, string target, string mp4Temp)
+        public async Task ConvertToMp4(string source, string target, string mp4Temp)
         {
             using (await locker.Use())
             {

@@ -5,14 +5,18 @@ using RemoteCache.Services.Downloader;
 
 namespace RemoteCache.Services
 {
-    public class WorkerService : IWorkerService
+    class WorkerService : IWorkerService
     {
-        ImageStorage storage = new ImageStorage();
-        PreFetcher preFetcher = new PreFetcher();
-        WorkerManager workPool = new WorkerManager();
+        readonly WorkerManager workPool;
+        readonly ImageStorage storage;
+        readonly PreFetcher preFetcher;
 
-        public WorkerService()
+        public WorkerService(ImageStorage storage, PreFetcher preFetcher)
         {
+            this.preFetcher = preFetcher;
+            this.storage = storage;
+            this.workPool = new WorkerManager(storage);
+
             Console.WriteLine("Program start");
             MediaConverter.Instance.ValidateFFMMPEG();
 

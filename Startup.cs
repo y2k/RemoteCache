@@ -23,6 +23,8 @@ namespace RemoteCache
             // Add MVC services to the services container.
             services.AddMvc();
             
+            services.AddTransient<ImageStorage>();
+            services.AddTransient<PreFetcher>();
             services.AddSingleton<IWorkerService, WorkerService>();
             services.AddTransient<BaseImageResizer, LibGDResizer>();
         }
