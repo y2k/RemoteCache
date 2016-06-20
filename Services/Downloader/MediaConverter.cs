@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using RemoteCache.Common;
 
 namespace RemoteCache.Services.Downloader
 {
@@ -12,9 +14,7 @@ namespace RemoteCache.Services.Downloader
         static byte[] WebmMagic = new byte[] { 0x1A, 0x45, 0xDF, 0xA3 };
         static byte[] GifMagic = new byte[] { 0x47, 0x49, 0x46, 0x38 };
 
-        const int MaxParallerThread = 2;
-
-        Semaphore locker = new Semaphore(MaxParallerThread, MaxParallerThread);
+        readonly SemaphoreSlim locker = new SemaphoreSlim(1);
 
         MediaConverter()
         {
@@ -25,10 +25,9 @@ namespace RemoteCache.Services.Downloader
             return IsGifVideo(path) || IsWebmVideo(path);
         }
 
-        public void ConvertToMp4(string source, string target, string mp4Temp)
+        public async Task ConvertToMp42(string source, string target, string mp4Temp)
         {
-            locker.WaitOne();
-            try
+            using (await locker.Use())
             {
                 var preset = IsWebmVideo(source) ? "veryfast" : "medium";
                 var args = $"-i \"{source}\" -preset {preset} -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" -f mp4 \"{mp4Temp}\"";
@@ -42,10 +41,6 @@ namespace RemoteCache.Services.Downloader
                 Process.Start(startInfo).WaitForExit();
 
                 File.Move(mp4Temp, target);
-            }
-            finally
-            {
-                locker.Release();
             }
         }
 
