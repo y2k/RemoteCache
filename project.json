@@ -3,12 +3,11 @@
   "buildOptions": {
     "emitEntryPoint": true
   },
-  "contentFiles": ["libgd.so", "libgd.dylib"],
+  "contentFiles": [
+    "libgd.so",
+    "libgd.dylib"
+  ],
   "dependencies": {
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.0-rc2-3002702"
-    },
     "Microsoft.AspNetCore.Diagnostics": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.StaticFiles": "1.0.0-rc2-final",
@@ -17,6 +16,12 @@
   },
   "frameworks": {
     "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        }
+      },
       "imports": "dnxcore50"
     }
   }
