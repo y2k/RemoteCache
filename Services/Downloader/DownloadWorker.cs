@@ -24,7 +24,7 @@ namespace RemoteCache.Services.Downloader
         {
             var tmp = storage.CreateTempFileInCacheDirectory();
             await DownloadTo(uri, tmp);
-            await storage.AddFileToStorage(uri, tmp);
+            tmp = await storage.AddFileToStorage(uri, tmp);
 
             if (mediaConverter.IsCanConvert(tmp))
             {
