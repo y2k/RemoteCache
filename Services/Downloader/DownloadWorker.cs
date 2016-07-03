@@ -7,51 +7,30 @@ namespace RemoteCache.Services.Downloader
 {
     class DownloadWorker
     {
-        readonly ImageStorage cacheRoot;
+        readonly ImageStorage storage;
         readonly WorkerManager workPool;
 
         public DownloadWorker(ImageStorage cacheRoot, WorkerManager workPool)
         {
-            this.cacheRoot = cacheRoot;
+            this.storage = cacheRoot;
             this.workPool = workPool;
         }
 
-        public async void Start()
+        public async Task Execute(Uri uri)
         {
-            while (true)
-            {
-                try { await Execute(); }
-                catch (Exception e) { Console.WriteLine(e.Message + "\n" + e); }
-            }
-        }
-
-        async Task Execute()
-        {
-            var url = workPool.RegisterNewWork();
-            if (url == null) await Task.Delay(1000);
-            else
-            {
-                try { await Execute(url); }
-                catch (Exception e) { Console.WriteLine("Can't download " + url + "\n" + e); }
-                finally { CompleteTask(url); }
-            }
-        }
-
-        async Task Execute(Uri uri)
-        {
-            var target = cacheRoot.GetPathForImage(uri);
-            if (File.Exists(target)) return;
-
-            var tmp = cacheRoot.CreateTempFileInCacheDirectory();
+            var tmp = storage.CreateTempFileInCacheDirectory();
             try
             {
                 await DownloadTo(uri, tmp);
+                string pathToMp4 = null;
                 if (MediaConverter.Instance.IsCanConvert(tmp))
                 {
-                    var pathToMp4 = cacheRoot.GetPathForImage(uri, "mp4");
-                    await MediaConverter.Instance.ConvertToMp4(tmp, pathToMp4, cacheRoot.CreateTempFileInCacheDirectory());
+                    // var pathToMp4 = cacheRoot.GetPathForImage(uri, "mp4");
+                    pathToMp4 = storage.CreateTempFileInCacheDirectory();
+                    await MediaConverter.Instance.ConvertToMp4(tmp, pathToMp4, storage.CreateTempFileInCacheDirectory());
                 }
-                File.Move(tmp, target);
+
+                await storage.AddFileToStorage(uri, tmp, pathToMp4);
             }
             finally { File.Delete(tmp); }
         }
@@ -70,7 +49,5 @@ namespace RemoteCache.Services.Downloader
                 await i.CopyToAsync(o);
             return tmp;
         }
-
-        void CompleteTask(Uri url) => workPool.UnregisterWork(url);
     }
 }

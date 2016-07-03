@@ -12,11 +12,11 @@ namespace RemoteCache.Services
         readonly ImageStorage storage;
         readonly PreFetcher preFetcher;
 
-        public WorkerService(ImageStorage storage, PreFetcher preFetcher)
+        public WorkerService(ImageStorage storage, PreFetcher preFetcher, WorkerManager workPool)
         {
             this.preFetcher = preFetcher;
             this.storage = storage;
-            this.workPool = new WorkerManager(storage);
+            this.workPool = workPool;
 
             Console.WriteLine("Program start");
             MediaConverter.Instance.ValidateFFMMPEG();
@@ -27,26 +27,25 @@ namespace RemoteCache.Services
             preFetcher.Start();
         }
 
-        public string GetPathForImage(Uri url, int width, int height, HttpRequest request)
+        public Task<string> GetPathForImage(Uri url, int width, int height, HttpRequest request)
         {
             preFetcher.RequestImage(url, width, height, request);
-            return Validate(url, storage.GetPathForImage(url));
+            return DownloadImage(url, storage.GetPathForImage(url));
         }
 
-        public Task<string> GetPathForExtraImageAsync(Uri url, string layer)
+        public Task<string> GetPathForExtraImage(Uri url, string layer)
         {
-            return Task.FromResult(Validate(url, storage.GetPathForImage(url, layer)));
+            return DownloadImage(url, storage.GetPathForImage(url, layer));
         }
 
-        string Validate(Uri source, string file)
+        async Task<string> DownloadImage(Uri source, string file)
         {
-            var result = file != null && File.Exists(file) ? file : null;
-            if (result == null)
+            if (!File.Exists(file))
             {
                 Console.WriteLine("Get new work " + source);
-                workPool.AddWork(source);
+                await workPool.DownloadImage(source);
             }
-            return result;
+            return File.Exists(file) ? file : null;
         }
     }
 }

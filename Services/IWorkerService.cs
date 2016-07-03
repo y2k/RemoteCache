@@ -6,8 +6,8 @@ namespace RemoteCache.Services
 {
     public interface IWorkerService
     {
-        string GetPathForImage(Uri url, int preferedWidth, int preferedHeight, HttpRequest request);
+        Task<string> GetPathForImage(Uri url, int preferedWidth, int preferedHeight, HttpRequest request);
 
-        Task<string> GetPathForExtraImageAsync(Uri url, string format);
+        Task<string> GetPathForExtraImage(Uri url, string format);
     }
 }

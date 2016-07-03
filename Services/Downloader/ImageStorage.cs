@@ -2,17 +2,45 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using RemoteCache.Common;
 
 namespace RemoteCache.Services.Downloader
 {
     class ImageStorage
     {
+        readonly SemaphoreSlim locker = new SemaphoreSlim(1);
+
         public static string CacheRoot
         {
             get { return Path.Combine(Directory.GetCurrentDirectory(), "cache"); }
         }
 
-        internal string GetPathForImage(Uri url, string layer = null)
+        public async Task AddFileToStorage(Uri uri, string srcPath, string srcPathMp4)
+        {
+            using (await locker.Use())
+            {
+                var target = DoGetPathForImage(uri);
+                if (File.Exists(target)) File.Delete(srcPath);
+                else File.Move(srcPath, target);
+
+                if (srcPathMp4 != null)
+                {
+                    var mp4 = DoGetPathForImage(uri, "mp4");
+                    if (File.Exists(mp4)) File.Delete(srcPathMp4);
+                    else File.Move(srcPathMp4, mp4);
+                }
+            }
+        }
+
+        [Obsolete]
+        public string GetPathForImage(Uri url, string layer = null)
+        {
+            return DoGetPathForImage(url, layer);
+        }
+
+        string DoGetPathForImage(Uri url, string layer = null)
         {
             var md5 = CalculateMD5Hash(url);
             var filename = md5[0] + "/" + md5[1] + md5[2] + "/" + md5.Substring(3) + (layer == null ? "" : "." + layer);
