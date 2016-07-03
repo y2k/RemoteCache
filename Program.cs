@@ -11,7 +11,7 @@ namespace RemoteCache
             MediaConverter.Instance.ValidateFFMMPEG();
 
             new WebHostBuilder()
-                .UseUrls("http://:5000/")
+                .UseUrls("http://0.0.0.0:5000/")
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
