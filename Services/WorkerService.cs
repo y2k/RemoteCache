@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using RemoteCache.Services.Downloader;
 
@@ -32,9 +33,9 @@ namespace RemoteCache.Services
             return Validate(url, storage.GetPathForImage(url));
         }
 
-        public string GetPathForExtraImage(Uri url, string layer)
+        public Task<string> GetPathForExtraImageAsync(Uri url, string layer)
         {
-            return Validate(url, storage.GetPathForImage(url, layer));
+            return Task.FromResult(Validate(url, storage.GetPathForImage(url, layer)));
         }
 
         string Validate(Uri source, string file)

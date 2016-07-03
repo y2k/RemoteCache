@@ -11,9 +11,9 @@ namespace RemoteCache.Controllers
     [Route("cache")]
     public class CacheController : Controller
     {
-        IWorkerService client;
+        readonly IWorkerService client;
 
-        BaseImageResizer resizer;
+        readonly BaseImageResizer resizer;
 
         public CacheController([FromServices] IWorkerService client, [FromServices] BaseImageResizer resizer)
         {
@@ -22,9 +22,9 @@ namespace RemoteCache.Controllers
         }
 
         [Route("original")]
-        public ActionResult Original(string url, string format)
+        public async Task<ActionResult> Original(string url, string format)
         {
-            var path = client.GetPathForExtraImage(new Uri(url), format);
+            var path = await client.GetPathForExtraImageAsync(new Uri(url), format);
             if (path == null)
             {
                 Response.ContentLength = 0;

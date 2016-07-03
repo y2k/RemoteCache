@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace RemoteCache.Services
@@ -7,6 +8,6 @@ namespace RemoteCache.Services
     {
         string GetPathForImage(Uri url, int preferedWidth, int preferedHeight, HttpRequest request);
 
-        string GetPathForExtraImage(Uri url, string format);
+        Task<string> GetPathForExtraImageAsync(Uri url, string format);
     }
 }
