@@ -22,11 +22,13 @@ namespace RemoteCache
         {
             // Add MVC services to the services container.
             services.AddMvc();
-            
+
             services.AddTransient<ImageStorage>();
             services.AddTransient<PreFetcher>();
-            services.AddSingleton<IWorkerService, WorkerService>();
             services.AddTransient<BaseImageResizer, LibGDResizer>();
+
+            services.AddSingleton<IWorkerService, WorkerService>();
+            services.AddSingleton<MediaConverter>(MediaConverter.Instance);
         }
 
         // Configure is called after ConfigureServices is called.

@@ -17,20 +17,13 @@ namespace RemoteCache.Services.Downloader
             get { return Path.Combine(Directory.GetCurrentDirectory(), "cache"); }
         }
 
-        public async Task AddFileToStorage(Uri uri, string srcPath, string srcPathMp4)
+        public async Task AddFileToStorage(Uri uri, string srcPath, string layer = null)
         {
             using (await locker.Use())
             {
-                var target = DoGetPathForImage(uri);
+                var target = DoGetPathForImage(uri, layer);
                 if (File.Exists(target)) File.Delete(srcPath);
                 else File.Move(srcPath, target);
-
-                if (srcPathMp4 != null)
-                {
-                    var mp4 = DoGetPathForImage(uri, "mp4");
-                    if (File.Exists(mp4)) File.Delete(srcPathMp4);
-                    else File.Move(srcPathMp4, mp4);
-                }
             }
         }
 
