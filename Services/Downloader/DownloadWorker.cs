@@ -8,12 +8,10 @@ namespace RemoteCache.Services.Downloader
     class DownloadWorker
     {
         readonly ImageStorage storage;
-        readonly WorkerManager workPool;
 
-        public DownloadWorker(ImageStorage cacheRoot, WorkerManager workPool)
+        public DownloadWorker(ImageStorage cacheRoot)
         {
             this.storage = cacheRoot;
-            this.workPool = workPool;
         }
 
         public async Task Execute(Uri uri)
@@ -25,7 +23,6 @@ namespace RemoteCache.Services.Downloader
                 string pathToMp4 = null;
                 if (MediaConverter.Instance.IsCanConvert(tmp))
                 {
-                    // var pathToMp4 = cacheRoot.GetPathForImage(uri, "mp4");
                     pathToMp4 = storage.CreateTempFileInCacheDirectory();
                     await MediaConverter.Instance.ConvertToMp4(tmp, pathToMp4, storage.CreateTempFileInCacheDirectory());
                 }

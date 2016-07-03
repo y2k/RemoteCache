@@ -8,20 +8,23 @@ namespace RemoteCache.Services
 {
     class WorkerService : IWorkerService
     {
-        readonly WorkerManager workPool;
+        private const long MaxCacheSize = 20L * 1024 * 1024 * 1024; // 20 GB
+
         readonly ImageStorage storage;
         readonly PreFetcher preFetcher;
+        readonly DownloadWorker downloader;
 
-        public WorkerService(ImageStorage storage, PreFetcher preFetcher, WorkerManager workPool)
+        public WorkerService(ImageStorage storage, PreFetcher preFetcher, DownloadWorker downloader)
         {
             this.preFetcher = preFetcher;
             this.storage = storage;
-            this.workPool = workPool;
+            this.downloader = downloader;
 
             Console.WriteLine("Program start");
             MediaConverter.Instance.ValidateFFMMPEG();
 
-            workPool.Start();
+            storage.Initialize();
+            new ClearWorker(storage, MaxCacheSize).Start();
             Console.WriteLine("Initialize downloaders complete");
 
             preFetcher.Start();
@@ -30,20 +33,21 @@ namespace RemoteCache.Services
         public Task<string> GetPathForImage(Uri url, int width, int height, HttpRequest request)
         {
             preFetcher.RequestImage(url, width, height, request);
-            return DownloadImage(url, storage.GetPathForImage(url));
+            return DownloadImage(url);
         }
 
         public Task<string> GetPathForExtraImage(Uri url, string layer)
         {
-            return DownloadImage(url, storage.GetPathForImage(url, layer));
+            return DownloadImage(url, layer);
         }
 
-        async Task<string> DownloadImage(Uri source, string file)
+        async Task<string> DownloadImage(Uri source, string layer = null)
         {
+            var file = storage.GetPathForImage(source, layer);
             if (!File.Exists(file))
             {
                 Console.WriteLine("Get new work " + source);
-                await workPool.DownloadImage(source);
+                await downloader.Execute(source);
             }
             return File.Exists(file) ? file : null;
         }
