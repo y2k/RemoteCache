@@ -24,12 +24,12 @@ namespace RemoteCache
             services.AddMvc();
 
             services.AddScoped<ImageStorage>();
-            services.AddTransient<PreFetcher>();
-            services.AddTransient<BaseImageResizer, LibGDResizer>();
-            services.AddTransient<DownloadWorker>();
+            services.AddScoped<PreFetcher>();
+            services.AddScoped<BaseImageResizer, LibGDResizer>();
+            services.AddScoped<DownloadWorker>();
+            services.AddScoped<MediaConverter>();
 
             services.AddSingleton<IWorkerService, WorkerService>();
-            services.AddSingleton<MediaConverter>(MediaConverter.Instance);
         }
 
         // Configure is called after ConfigureServices is called.

@@ -8,26 +8,40 @@ using RemoteCache.Common;
 
 namespace RemoteCache.Services.Downloader
 {
-    public class MediaConverter
+    class MediaConverter
     {
-        public static readonly MediaConverter Instance = new MediaConverter();
         static byte[] WebmMagic = new byte[] { 0x1A, 0x45, 0xDF, 0xA3 };
         static byte[] GifMagic = new byte[] { 0x47, 0x49, 0x46, 0x38 };
 
         readonly SemaphoreSlim locker = new SemaphoreSlim(1);
+        readonly ImageStorage storage;
 
-        MediaConverter()
+        public MediaConverter(ImageStorage storage)
         {
+            this.storage = storage;
         }
 
-        public bool IsCanConvert(string path)
-        {
-            return IsGifVideo(path) || IsWebmVideo(path);
-        }
+        public async void ConvertGifToMp4IgnoreResule(Uri uri) => await ConvertGifToMp4(uri);
 
-        public async Task ConvertToMp4(string source, string target, string mp4Temp)
+        public async Task ConvertGifToMp4(Uri uri)
         {
             using (await locker.Use())
+            {
+                if (storage.GetPathForImageOrNull(uri, "mp4") != null) return;
+                var imagePath = storage.GetPathForImageOrNull(uri);
+                if (!IsCanConvert(imagePath)) return;
+
+                var pathToMp4 = storage.CreateTempFileInCacheDirectory();
+                await ConvertToMp4(imagePath, pathToMp4, storage.CreateTempFileInCacheDirectory());
+                await storage.AddFileToStorage(uri, pathToMp4, "mp4");
+            }
+        }
+
+        bool IsCanConvert(string path) => IsGifVideo(path) || IsWebmVideo(path);
+
+        Task ConvertToMp4(string source, string target, string mp4Temp)
+        {
+            return Task.Run(() =>
             {
                 var preset = IsWebmVideo(source) ? "veryfast" : "medium";
                 var args = $"-i \"{source}\" -preset {preset} -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" -f mp4 \"{mp4Temp}\"";
@@ -41,7 +55,7 @@ namespace RemoteCache.Services.Downloader
                 Process.Start(startInfo).WaitForExit();
 
                 File.Move(mp4Temp, target);
-            }
+            });
         }
 
         bool IsWebmVideo(string path)
@@ -64,12 +78,9 @@ namespace RemoteCache.Services.Downloader
             }
         }
 
-        public void ValidateFFMMPEG()
-        {
-            GetFFFMPEG();
-        }
+        public static void ValidateFFMMPEG() => GetFFFMPEG();
 
-        string GetFFFMPEG()
+        static string GetFFFMPEG()
         {
             var path = Environment.GetEnvironmentVariable("REMOTECACHE_FFMPEG_DIR");
             if (path == null)

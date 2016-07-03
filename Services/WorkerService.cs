@@ -13,12 +13,14 @@ namespace RemoteCache.Services
         readonly ImageStorage storage;
         readonly PreFetcher preFetcher;
         readonly DownloadWorker downloader;
+        readonly MediaConverter mediaConverter;
 
-        public WorkerService(ImageStorage storage, PreFetcher preFetcher, DownloadWorker downloader)
+        public WorkerService(ImageStorage storage, PreFetcher preFetcher, DownloadWorker downloader, MediaConverter mediaConverter)
         {
             this.preFetcher = preFetcher;
             this.storage = storage;
             this.downloader = downloader;
+            this.mediaConverter = mediaConverter;
 
             storage.Initialize();
             new ClearWorker(storage, MaxCacheSize).Start();
@@ -39,13 +41,15 @@ namespace RemoteCache.Services
 
         async Task<string> DownloadImage(Uri source, string layer = null)
         {
-            var file = storage.GetPathForImage(source, layer);
-            if (!File.Exists(file))
+            if (storage.GetPathForImageOrNull(source, layer) == null)
             {
-                Console.WriteLine("Get new work " + source);
-                await downloader.Execute(source);
+                await downloader.DownloadImage(source);
+
+                if (layer == null) mediaConverter.ConvertGifToMp4IgnoreResule(source);
+                else await mediaConverter.ConvertGifToMp4(source);
             }
-            return File.Exists(file) ? file : null;
+
+            return storage.GetPathForImageOrNull(source, layer);
         }
     }
 }

@@ -28,10 +28,10 @@ namespace RemoteCache.Services.Downloader
             }
         }
 
-        [Obsolete]
-        public string GetPathForImage(Uri url, string layer = null)
+        public string GetPathForImageOrNull(Uri url, string layer = null)
         {
-            return DoGetPathForImage(url, layer);
+            var f = DoGetPathForImage(url, layer);
+            return File.Exists(f) ? f : null;
         }
 
         string DoGetPathForImage(Uri url, string layer = null)

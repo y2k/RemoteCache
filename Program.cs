@@ -8,7 +8,7 @@ namespace RemoteCache
     {
         public static void Main()
         {
-            MediaConverter.Instance.ValidateFFMMPEG();
+            MediaConverter.ValidateFFMMPEG();
 
             new WebHostBuilder()
                 .UseUrls("http://0.0.0.0:5000/")
