@@ -20,12 +20,8 @@ namespace RemoteCache.Services
             this.storage = storage;
             this.downloader = downloader;
 
-            Console.WriteLine("Program start");
-            MediaConverter.Instance.ValidateFFMMPEG();
-
             storage.Initialize();
             new ClearWorker(storage, MaxCacheSize).Start();
-            Console.WriteLine("Initialize downloaders complete");
 
             preFetcher.Start();
         }

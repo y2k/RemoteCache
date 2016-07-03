@@ -1,5 +1,6 @@
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using RemoteCache.Services.Downloader;
 
 namespace RemoteCache
 {
@@ -7,6 +8,8 @@ namespace RemoteCache
     {
         public static void Main()
         {
+            MediaConverter.Instance.ValidateFFMMPEG();
+
             new WebHostBuilder()
                 .UseUrls("http://:5000/")
                 .UseKestrel()
