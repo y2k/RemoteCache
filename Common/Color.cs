@@ -4,11 +4,15 @@ namespace RemoteCache.Common
 {
     public class Color
     {
-        readonly uint color;
+        public int R { get { return (color >> 16) & 0xFF; } }
+        public int G { get { return (color >> 8) & 0xFF; } }
+        public int B { get { return color & 0xFF; } }
+
+        readonly int color;
 
         public Color(string textColor)
         {
-            color = Convert.ToUInt32(textColor, 16);
+            color = Convert.ToInt32(textColor, 16);
         }
     }
 }

@@ -18,6 +18,12 @@ namespace RemoteCache.Services.Resizer
             var srcImage = CreateImageFromBytes(File.ReadAllBytes(imagePath));
             var dstImage = GDImport.gdImageCreateTrueColor(width, height);
 
+            if (color != null)
+            {
+                var c = GDImport.gdImageColorAllocate(dstImage, color.R, color.G, color.B);
+                GDImport.gdImageFill(dstImage, 0, 0, c);
+            }
+
             var destAspect = (float)width / height;
             var srcAspect = (float)GetWidth(srcImage) / GetHeight(srcImage);
             if (destAspect > srcAspect)
