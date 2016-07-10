@@ -25,7 +25,7 @@ namespace RemoteCache
 
             services.AddScoped<ImageStorage>();
             services.AddScoped<PreFetcher>();
-            services.AddScoped<BaseImageResizer, LibGDResizer>();
+            services.AddScoped<IImageResizer, LibGDResizer>();
             services.AddScoped<DownloadWorker>();
             services.AddScoped<MediaConverter>();
 

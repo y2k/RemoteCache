@@ -12,9 +12,9 @@ namespace RemoteCache.Controllers
     public class CacheController : Controller
     {
         readonly IWorkerService client;
-        readonly BaseImageResizer resizer;
+        readonly IImageResizer resizer;
 
-        public CacheController([FromServices] IWorkerService client, [FromServices] BaseImageResizer resizer)
+        public CacheController([FromServices] IWorkerService client, [FromServices] IImageResizer resizer)
         {
             this.client = client;
             this.resizer = resizer;
@@ -65,9 +65,7 @@ namespace RemoteCache.Controllers
                 return new StatusCodeResult((int)HttpStatusCode.NotFound);
             }
 
-            resizer.BackgroundColor = bgColor;
-
-            var result = await resizer.GetRectAsync(quality, path, width, height);
+            var result = await resizer.GetRectAsync(quality, path, width, height, bgColor?.Let(s => new Color(s)));
             Response.Headers["Cache-Control"] = "public, max-age=2419200";
             Response.ContentLength = result.Length;
             return File(result, "image/jpeg");

@@ -1,10 +1,14 @@
+using System;
+
 namespace RemoteCache.Common
 {
     public class Color
     {
-        public Color(int alpha, int color)
+        readonly uint color;
+
+        public Color(string textColor)
         {
-            // TODO:
+            color = Convert.ToUInt32(textColor, 16);
         }
     }
 }

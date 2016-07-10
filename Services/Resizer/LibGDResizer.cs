@@ -2,17 +2,18 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using RemoteCache.Common;
 
 namespace RemoteCache.Services.Resizer
 {
-    public class LibGDResizer : BaseImageResizer
+    public class LibGDResizer : IImageResizer
     {
-        public override Task<Stream> GetRectAsync(int? quality, string imagePath, int width, int height)
+        public Task<Stream> GetRectAsync(int? quality, string imagePath, int width, int height, Color color = null)
         {
-            return Task.Run(() => GetRect(quality, imagePath, width, height));
+            return Task.Run(() => GetRect(quality, imagePath, width, height, color));
         }
 
-        public override Stream GetRect(int? quality, string imagePath, int width, int height)
+        Stream GetRect(int? quality, string imagePath, int width, int height, Color color)
         {
             var srcImage = CreateImageFromBytes(File.ReadAllBytes(imagePath));
             var dstImage = GDImport.gdImageCreateTrueColor(width, height);
