@@ -29,7 +29,7 @@ namespace RemoteCache.Services.Resizer
             if (destAspect > srcAspect)
             {
                 var h = (int)(GetWidth(srcImage) / destAspect);
-                GDImport.gdImageCopyResized(
+                GDImport.gdImageCopyResampled(
                     dstImage, srcImage,
                     0, 0,
                     0, (GetHeight(srcImage) - h) / 2,
@@ -39,7 +39,7 @@ namespace RemoteCache.Services.Resizer
             else
             {
                 var w = (int)(GetHeight(srcImage) * destAspect);
-                GDImport.gdImageCopyResized(
+                GDImport.gdImageCopyResampled(
                     dstImage, srcImage,
                     0, 0,
                     (GetWidth(srcImage) - w) / 2, 0,
