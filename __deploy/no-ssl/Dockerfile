@@ -1,4 +1,4 @@
-FROM microsoft/dotnet
+FROM kaerus/bootstrap
 
 ENV ASPNETCORE_ENVIRONMENT Development
 ENV REMOTECACHE_FFMPEG_DIR /.bootstrap/ffmpeg
