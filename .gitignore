@@ -1,5 +1,3 @@
-cache
-.vscode
-bin
-obj
-project.lock.json
+/bin
+/obj
+/cache
