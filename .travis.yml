@@ -10,5 +10,5 @@ before_script:
 script:  
   - dotnet publish -c Release -r linux-x64 --self-contained false -o out
   - docker build --rm -f Dockerfile -t remotecache:latest .
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push $DOCKER_USERNAME/remotecache;
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push $DOCKER_USERNAME/remotecache
