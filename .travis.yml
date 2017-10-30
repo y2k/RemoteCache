@@ -16,8 +16,7 @@ script:
   - docker push y2khub/remotecache
 deploy:
   provider: script
-  script: 
-  - echo $DEPLOY_KEY > deployment_key.txt && chmod 600 deployment_key.txt
-  - ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker pull y2khub/remotecache"
-  - ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker rm -f y2khub/remotecache"
-  - ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker run -d -p 8080:80 -v $HOME/remote-cache/cache:/app/cache y2khub/remotecache"
+  script: echo $DEPLOY_KEY > deployment_key.txt && chmod 600 deployment_key.txt &&
+          ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker pull y2khub/remotecache" &&
+          ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker rm -f y2khub/remotecache" &&
+          ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker run -d -p 8080:80 -v $HOME/remote-cache/cache:/app/cache y2khub/remotecache" &&
