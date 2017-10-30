@@ -1,7 +1,7 @@
 FROM microsoft/dotnet:2.0.0-runtime
 
 EXPOSE 8080
-WORKDIR /dotnetapp
+WORKDIR /app
 
 # ffmpeg for convert gif to mp4
 # RUN apt-get update && apt-get install -y ffmpeg
