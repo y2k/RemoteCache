@@ -200,6 +200,4 @@ module WebApi =
         startWebServer defaultConfig app
 
 [<EntryPoint>]
-let main _ =
-    WebApi.start ()
-    0
+let main _ = WebApi.start (); 0

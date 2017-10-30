@@ -3,7 +3,12 @@ sudo: required
 dist: trusty  
 mono: none
 dotnet: 2.0.0
+services:
+  - docker
 before_script:
   - dotnet restore
 script:  
   - dotnet publish -c Release -r linux-x64 --self-contained false -o out
+  - docker build --rm -f Dockerfile -t remotecache:latest .
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push $DOCKER_USERNAME/remotecache;
