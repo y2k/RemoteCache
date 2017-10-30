@@ -6,7 +6,7 @@ dotnet: 2.0.0
 services:
   - docker
 env:
-  - =y2khub/remotecache
+  - DOCKER_ID=y2khub/remotecache
 before_script:
   - dotnet restore
 script:  
