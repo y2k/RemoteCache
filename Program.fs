@@ -126,7 +126,7 @@ module SuaveRedirectGenerator =
     open System.Security.Cryptography
 
     let generate x =
-        sprintf "/fit?url=%s&width=%d&height=%d" (Uri.EscapeDataString (x.uri.ToString())) x.width x.height
+        sprintf "/cache/fit?url=%s&width=%d&height=%d" (Uri.EscapeDataString (x.uri.ToString())) x.width x.height
     
     let calculateMD5Hash (uri : Uri) =
         Encoding.UTF8.GetBytes(uri.AbsoluteUri)
@@ -172,16 +172,13 @@ module WebApi =
     open Common
     open Common.Domain
 
-    let getChacheDir _ =
-        Environment.CurrentDirectory + "/cache"
-
     let requestImage r ctx = 
         match tryNormalize r with
         | Some x -> FOUND (SuaveRedirectGenerator.generate x) ctx
         | None -> 
             async {
                 let! imageResult =
-                    getChacheDir()
+                    Environment.CurrentDirectory + "/cache"
                     |> flip SuaveRedirectGenerator.urlToPath r.uri
                     |> flip IOAction.tryLoadImage r
                 return!
@@ -197,7 +194,7 @@ module WebApi =
         let config = { defaultConfig with 
                            bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") 8080us  ] }
         let app =
-            path "/fit" >=> bindReq (fun r -> binding {
+            path "/cache/fit" >=> bindReq (fun r -> binding {
                 let! width = r.queryParam "width" => int
                 let! height = r.queryParam "height" => int
                 let! uri = r.queryParam "url" => Uri
