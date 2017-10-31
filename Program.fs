@@ -186,7 +186,10 @@ module WebApi =
                     |> flip IOAction.tryLoadImage r
                 return!
                     match imageResult with
-                    | Ok image -> (ok image) ctx >>= setMimeType "image/jpeg"
+                    | Ok image -> 
+                        (ok image) ctx 
+                        >>= setMimeType "image/jpeg" 
+                        >>= setHeader "Cache-Control" "public, max-age=60"
                     | Error e -> (INTERNAL_ERROR e.Message) ctx
             }
 
