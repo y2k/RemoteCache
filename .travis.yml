@@ -6,17 +6,19 @@ dotnet: 2.0.0
 services:
   - docker
 env:
+  - DOCKER_NAME=remotecache
   - DOCKER_ID=y2khub/remotecache
+before_install:
+  - openssl aes-256-cbc -K $encrypted_bc6bada296d6_key -iv $encrypted_bc6bada296d6_iv -in deployment_key.txt.enc -out deployment_key.txt -d
+  - chmod 600 deployment_key.txt
 before_script:
   - dotnet restore
 script:  
   - dotnet publish -c Release -r linux-x64 --self-contained false -o out
-  - docker build --rm -f Dockerfile -t y2khub/remotecache .
+  - docker build --rm -f Dockerfile -t $DOCKER_ID .
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker push y2khub/remotecache
+  - docker push $DOCKER_ID
 deploy:
   provider: script
-  script: echo $DEPLOY_KEY > deployment_key.txt && chmod 600 deployment_key.txt &&
-          ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker pull y2khub/remotecache" &&
-          ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker rm -f y2khub/remotecache" &&
-          ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker run -d -p 8080:80 -v $HOME/remote-cache/cache:/app/cache y2khub/remotecache" &&
+  skip_cleanup: true
+  script: ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker pull $DOCKER_ID && docker rm -f $DOCKER_NAME || true && docker run --name $DOCKER_NAME -d -p 80:8080 -v $HOME/remotecache:/app/cache $DOCKER_ID"
