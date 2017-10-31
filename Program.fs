@@ -168,6 +168,7 @@ module WebApi =
     open Suave.Redirection
     open Suave.ServerErrors
     open Suave.Successful
+    open Suave.Writers
     open Common
     open Common.Domain
 
@@ -185,7 +186,7 @@ module WebApi =
                     |> flip IOAction.tryLoadImage r
                 return!
                     match imageResult with
-                    | Ok image -> (ok image) ctx
+                    | Ok image -> (ok image) ctx >>= setMimeType "image/jpeg"
                     | Error e -> (INTERNAL_ERROR e.Message) ctx
             }
 
