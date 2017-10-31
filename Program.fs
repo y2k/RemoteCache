@@ -125,9 +125,8 @@ module SuaveRedirectGenerator =
     open System.Text
     open System.Security.Cryptography
 
-    let generate x (ctx: HttpContext) =
-        let auth = sprintf "%s://%s:%i" ctx.request.url.Scheme ctx.request.host ctx.request.url.Port
-        sprintf "%s/fit?url=%s&width=%d&height=%d" auth (Uri.EscapeDataString (x.uri.ToString())) x.width x.height
+    let generate x =
+        sprintf "/fit?url=%s&width=%d&height=%d" (Uri.EscapeDataString (x.uri.ToString())) x.width x.height
     
     let calculateMD5Hash (uri : Uri) =
         Encoding.UTF8.GetBytes(uri.AbsoluteUri)
@@ -177,7 +176,7 @@ module WebApi =
 
     let requestImage r ctx = 
         match tryNormalize r with
-        | Some x -> FOUND (SuaveRedirectGenerator.generate x ctx) ctx
+        | Some x -> FOUND (SuaveRedirectGenerator.generate x) ctx
         | None -> 
             async {
                 let! imageResult =
