@@ -126,7 +126,7 @@ module SuaveRedirectGenerator =
     open System.Security.Cryptography
 
     let generate x (ctx: HttpContext) =
-        let auth = ctx.request.url.GetLeftPart(UriPartial.Authority)
+        let auth = sprintf "%s://%s:%i" ctx.request.url.Scheme ctx.request.host ctx.request.url.Port
         sprintf "%s/fit?url=%s&width=%d&height=%d" auth (Uri.EscapeDataString (x.uri.ToString())) x.width x.height
     
     let calculateMD5Hash (uri : Uri) =
