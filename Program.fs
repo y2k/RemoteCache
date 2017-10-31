@@ -159,6 +159,7 @@ module IOAction =
 
 module WebApi =
     open System
+    open System.Net
     open Suave
     open Suave.Model
     open Suave.Model.Binding
@@ -190,6 +191,8 @@ module WebApi =
             }
 
     let start () =
+        let config = { defaultConfig with 
+                           bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") 8080us  ] }
         let app =
             path "/fit" >=> bindReq (fun r -> binding {
                 let! width = r.queryParam "width" => int
@@ -197,7 +200,7 @@ module WebApi =
                 let! uri = r.queryParam "url" => Uri
                 return { width = width; height = height; uri = uri }
             }) requestImage BAD_REQUEST 
-        startWebServer defaultConfig app
+        startWebServer config app
 
 [<EntryPoint>]
 let main _ = 
