@@ -6,8 +6,9 @@ dotnet: 2.0.0
 services:
   - docker
 env:
-  - DOCKER_NAME=remotecache
-  - DOCKER_ID=y2khub/remotecache
+  global:
+    - DOCKER_NAME=remotecache
+    - DOCKER_ID=y2khub/remotecache
 before_install:
   - openssl aes-256-cbc -K $encrypted_bc6bada296d6_key -iv $encrypted_bc6bada296d6_iv -in deployment_key.txt.enc -out deployment_key.txt -d
   - chmod 600 deployment_key.txt
@@ -21,4 +22,4 @@ script:
 deploy:
   provider: script
   skip_cleanup: true
-  script: ssh -i deployment_key.txt $DEPLOY_AUTHORITY "docker pull $DOCKER_ID && docker rm -f $DOCKER_NAME || true && docker run --name $DOCKER_NAME -d -p 80:8080 -v $HOME/remotecache:/app/cache $DOCKER_ID"
+  script: ssh -o "StrictHostKeyChecking=no" -i deployment_key.txt $DEPLOY_AUTHORITY "docker pull $DOCKER_ID && docker rm -f $DOCKER_NAME || true && docker run --name $DOCKER_NAME -d -p 80:8080 -v $HOME/remotecache:/app/cache $DOCKER_ID"
