@@ -74,6 +74,7 @@ module Resizer =
     open System
     open System.IO
     open SkiaSharp
+    open Common
 
     type RequestCmd = AsyncReplyChannel<Result<byte array, exn>> * string * int * int
 
@@ -84,7 +85,11 @@ module Resizer =
         use resultBitmap = new SKBitmap(w, h)
         use canvas = new SKCanvas(resultBitmap)
 
-        let rect = SKRect(0.f, 0.f, float32 resultBitmap.Width, float32 resultBitmap.Height)
+        let rect = 
+            Domain.fit
+                { width = bitmap.Width; height = bitmap.Height }
+                { width = w; height = h }
+            |> SkiaUtils.toSKRect
         use paint = new SKPaint()
         paint.IsAntialias <- true
         paint.FilterQuality <- SKFilterQuality.High
@@ -126,7 +131,9 @@ module SuaveRedirectGenerator =
     open System.Security.Cryptography
 
     let generate x =
-        sprintf "/cache/fit?url=%s&width=%d&height=%d" (Uri.EscapeDataString (x.uri.ToString())) x.width x.height
+        sprintf 
+            "/cache/fit?url=%s&width=%d&height=%d" (Uri.EscapeDataString (x.uri.ToString())) 
+            x.size.width x.size.height
     
     let calculateMD5Hash (uri : Uri) =
         Encoding.UTF8.GetBytes(uri.AbsoluteUri)
@@ -144,7 +151,7 @@ module IOAction =
 
     let tryLoadImage path r = 
         async {
-            let! imageFromCache = Resizer.addWork path r.width r.height
+            let! imageFromCache = Resizer.addWork path r.size.width r.size.height
             match imageFromCache with
             | Ok x -> return Ok x
             | Error _ -> 
@@ -152,7 +159,7 @@ module IOAction =
                     path |> Path.GetDirectoryName |> Directory.CreateDirectory |> ignore
                     do! Downloader.agent.PostAndAsyncReply (fun rp -> rp, r.uri, path) 
                         |> Async.Ignore
-                    return! Resizer.addWork path r.width r.height
+                    return! Resizer.addWork path r.size.width r.size.height
                 }
         }
 
@@ -172,15 +179,15 @@ module WebApi =
     open Common
     open Common.Domain
 
-    let requestImage r ctx = 
-        match tryNormalize r with
-        | Some x -> FOUND (SuaveRedirectGenerator.generate x) ctx
+    let requestImage sizedUri ctx = 
+        match tryNormalize sizedUri.size with
+        | Some x -> FOUND (SuaveRedirectGenerator.generate { sizedUri with size = x }) ctx
         | None -> 
             async {
                 let! imageResult =
                     Environment.CurrentDirectory + "/cache"
-                    |> flip SuaveRedirectGenerator.urlToPath r.uri
-                    |> flip IOAction.tryLoadImage r
+                    |> flip SuaveRedirectGenerator.urlToPath sizedUri.uri
+                    |> flip IOAction.tryLoadImage sizedUri
                 return!
                     match imageResult with
                     | Ok image -> 
@@ -198,7 +205,7 @@ module WebApi =
                 let! width = r.queryParam "width" => int
                 let! height = r.queryParam "height" => int
                 let! uri = r.queryParam "url" => Uri
-                return { width = width; height = height; uri = uri }
+                return { uri = uri; size = { width = width; height = height } }
             }) requestImage BAD_REQUEST 
         startWebServer config app
 

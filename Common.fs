@@ -35,10 +35,23 @@ module Async =
 module Domain =
     open System
 
-    type Sized = 
-        { width: int
-          height: int
-          uri: Uri }
+    type Size = { width: int; height: int }
+    type Rect = { size: Size; left: int; top: int }
+    type SizeUri = { size: Size; uri: Uri }
+
+    let fit src target =
+        let rs = (float src.width) / (float src.height)
+        let rt = (float target.width) / (float target.height)
+        if rt > rs then
+            let th = (float src.height) * (float target.width) / (float src.width) |> int
+            { left = 0
+              top = (target.height - th) / 2
+              size = { width = target.width; height = th } }
+        else 
+            let tw = (float src.width) * (float target.height) / (float src.height) |> int
+            { left = (target.width - tw) / 2
+              top = 0
+              size = { width = tw; height = target.height } }
 
     let private factor = 3;
     let tryNormalize x = 
@@ -55,3 +68,13 @@ module Domain =
         match nw = x.width with
         | true -> None
         | false -> Some { x with width = nw; height = nh }
+
+module SkiaUtils =
+    open SkiaSharp
+
+    let toSKRect (rect: Domain.Rect) =
+        SKRect(
+            float32 <| rect.left,
+            float32 <| rect.top,
+            float32 <| rect.left + rect.size.width,
+            float32 <| rect.top + rect.size.height)
