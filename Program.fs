@@ -124,7 +124,6 @@ module Resizer =
         agent.PostAndAsyncReply (fun r -> r, path, w, h)
 
 module SuaveRedirectGenerator =
-    open Suave
     open Common.Domain
     open System
     open System.Text
@@ -168,7 +167,6 @@ module WebApi =
     open System.Net
     open Suave
     open Suave.Model
-    open Suave.Model.Binding
     open Suave.Operators
     open Suave.Filters
     open Suave.RequestErrors
