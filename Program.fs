@@ -12,7 +12,7 @@
             r.RequestUri <- uri
             r.Headers.Referrer <- uri
             r.Headers.UserAgent.ParseAdd "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"
-            
+
             let! resp = http.SendAsync(r) |> Async.AwaitTask
 
             let tmp = Path.GetTempFileName()
