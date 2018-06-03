@@ -6,11 +6,12 @@
 
     type Request = AsyncReplyChannel<Result<unit, Exception>> * Uri * string
 
-    let private download' uri path (http: HttpClient) =
+    let private download uri path (http : HttpClient) =
         async {
             use r = new HttpRequestMessage()
             r.RequestUri <- uri
             r.Headers.Referrer <- uri
+            r.Headers.UserAgent.ParseAdd "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"
             
             let! resp = http.SendAsync(r) |> Async.AwaitTask
 
@@ -26,7 +27,7 @@
             let http = new HttpClient()
             let rec loop () = async {
                 let! (reply, uri, path) = inbox.Receive()
-                let! resp = Async.asResult (download' uri path http)
+                let! resp = Async.asResult (download uri path http)
                 reply.Reply resp
                 do! loop ()
             }
@@ -129,11 +130,11 @@ module SuaveRedirectGenerator =
     open System.Text
     open System.Security.Cryptography
 
-    let generate x =
+    let generate (x : SizeUri) =
         sprintf 
             "/cache/fit?url=%s&width=%d&height=%d" (Uri.EscapeDataString (x.uri.ToString())) 
             x.size.width x.size.height
-    
+
     let calculateMD5Hash (uri : Uri) =
         Encoding.UTF8.GetBytes(uri.AbsoluteUri)
         |> MD5.Create().ComputeHash
@@ -148,7 +149,7 @@ module IOAction =
     open System.IO
     open Common.Domain
 
-    let tryLoadImage path r = 
+    let tryLoadImage path (r : SizeUri) = 
         async {
             let! imageFromCache = Resizer.addWork path r.size.width r.size.height
             match imageFromCache with
