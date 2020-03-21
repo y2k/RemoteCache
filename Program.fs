@@ -98,7 +98,7 @@ module Resizer =
         canvas.DrawBitmap(bitmap, rect, paint)
 
         let outStream = new SKDynamicMemoryWStream()
-        resultBitmap.Encode(outStream, SKEncodedImageFormat.Jpeg, 90) |> ignore
+        SKPixmap.Encode(outStream, resultBitmap, SKEncodedImageFormat.Jpeg, 90) |> ignore
         use data = outStream.DetachAsData()
         data.ToArray()
 
@@ -200,12 +200,15 @@ module WebApi =
         let config = { defaultConfig with 
                            bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") 8080us  ] }
         let app =
-            path "/cache/fit" >=> bindReq (fun r -> binding {
-                let! width = r.queryParam "width" => int
-                let! height = r.queryParam "height" => int
-                let! uri = r.queryParam "url" => Uri
-                return { uri = uri; size = { width = width; height = height } }
-            }) requestImage BAD_REQUEST 
+            choose [
+                path "/info" >=> OK "Version: 0.1"
+                path "/cache/fit" >=> bindReq (fun r -> binding {
+                    let! width = r.queryParam "width" => int
+                    let! height = r.queryParam "height" => int
+                    let! uri = r.queryParam "url" => Uri
+                    return { uri = uri; size = { width = width; height = height } }
+                }) requestImage BAD_REQUEST 
+            ]
         startWebServer config app
 
 [<EntryPoint>]

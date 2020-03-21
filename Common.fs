@@ -1,6 +1,6 @@
 module Common
 
-let flip f a b = f b a
+let inline flip f a b = f b a
 
 let (=>) choice f =
     match choice with
@@ -53,18 +53,16 @@ module Domain =
               top = 0
               size = { width = tw; height = target.height } }
 
-    let private factor = 3;
     let tryNormalize x = 
-        let mutable t = x.width
-        let mutable n = 0
+        let normalizeWidth width =
+            let n = 1.199
+            Math.Log(float <| 1 + width, n)
+            |> Math.Floor
+            |> fun p -> Math.Pow(n, p)
+            |> int
 
-        while t >= factor do
-            t <- t / factor
-            n <- n + 1
-
-        let nw = t * (int <| Math.Pow(float factor, float n))
+        let nw = normalizeWidth x.width
         let nh = int <| (float nw) * (float x.height) / (float x.width)
-
         match nw = x.width with
         | true -> None
         | false -> Some { x with width = nw; height = nh }
