@@ -198,7 +198,7 @@ module WebApi =
                            bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") 8080us  ] }
         let app =
             choose [
-                path "/info" >=> OK "Version: 0.1"
+                path "/info" >=> Successful.OK "Version: 0.1"
                 path "/cache/fit" >=> bindReq (fun r -> binding {
                     let! width = r.queryParam "width" => int
                     let! height = r.queryParam "height" => int
