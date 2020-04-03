@@ -171,16 +171,13 @@ module WebApi =
     open Suave.Operators
     open Suave.Filters
     open Suave.RequestErrors
-    open Suave.Redirection
-    open Suave.ServerErrors
-    open Suave.Successful
     open Suave.Writers
     open Common
     open Common.Domain
 
     let requestImage sizedUri ctx = 
         match tryNormalize sizedUri.size with
-        | Some x -> FOUND (SuaveRedirectGenerator.generate { sizedUri with size = x }) ctx
+        | Some x -> Redirection.MOVED_PERMANENTLY (SuaveRedirectGenerator.generate { sizedUri with size = x }) ctx
         | None -> 
             async {
                 let! imageResult =
@@ -190,10 +187,10 @@ module WebApi =
                 return!
                     match imageResult with
                     | Ok image -> 
-                        (ok image) ctx 
+                        (Successful.ok image) ctx 
                         >>= setMimeType "image/jpeg" 
                         >>= setHeader "Cache-Control" "public, max-age=60"
-                    | Error e -> (INTERNAL_ERROR e.Message) ctx
+                    | Error e -> (ServerErrors.INTERNAL_ERROR e.Message) ctx
             }
 
     let start () =
