@@ -4,7 +4,7 @@
     open System.Net.Http
     open Common
 
-    type Request = AsyncReplyChannel<Result<unit, Exception>> * Uri * string
+    type Request = AsyncReplyChannel<Result<unit, exn>> * Uri * string
 
     let private download uri path (http : HttpClient) =
         async {
@@ -149,7 +149,22 @@ module IOAction =
     open System.IO
     open Common.Domain
 
-    let tryLoadImage path (r : SizeUri) =
+    let tryLoadOriginImage imageUri (path: string) =
+        async {
+            if File.Exists path
+            then
+                let! bytes = File.ReadAllBytesAsync path |> Async.AwaitTask
+                return Ok bytes
+            else
+                path |> Path.GetDirectoryName |> Directory.CreateDirectory |> ignore
+                match! Downloader.agent.PostAndAsyncReply (fun rp -> rp, imageUri, path) with
+                | Error e -> return Error e
+                | Ok _ ->
+                    let! bytes = File.ReadAllBytesAsync path |> Async.AwaitTask
+                    return Ok bytes
+        }
+
+    let tryLoadImage (r : SizeUri) path =
         async {
             let! imageFromCache = Resizer.addWork path r.size.width r.size.height
             match imageFromCache with
@@ -175,23 +190,28 @@ module WebApi =
     open Common
     open Common.Domain
 
+    let loadImages (f: _ -> Result<byte array, exn> Async) imageUri ctx =
+        async {
+            let! imageResult =
+                Environment.CurrentDirectory + "/cache"
+                |> flip SuaveRedirectGenerator.urlToPath imageUri
+                |> f
+            return!
+                match imageResult with
+                | Ok image ->
+                    (Successful.ok image) ctx
+                    >>= setMimeType "image/jpeg"
+                    >>= setHeader "Cache-Control" "public, max-age=60"
+                | Error e -> (ServerErrors.INTERNAL_ERROR e.Message) ctx
+        }
+
+    let requestOriginImage imageUri ctx =
+        loadImages (IOAction.tryLoadOriginImage imageUri) imageUri ctx
+
     let requestImage sizedUri ctx =
         match tryNormalize sizedUri.size with
         | Some x -> Redirection.MOVED_PERMANENTLY (SuaveRedirectGenerator.generate { sizedUri with size = x }) ctx
-        | None ->
-            async {
-                let! imageResult =
-                    Environment.CurrentDirectory + "/cache"
-                    |> flip SuaveRedirectGenerator.urlToPath sizedUri.uri
-                    |> flip IOAction.tryLoadImage sizedUri
-                return!
-                    match imageResult with
-                    | Ok image ->
-                        (Successful.ok image) ctx
-                        >>= setMimeType "image/jpeg"
-                        >>= setHeader "Cache-Control" "public, max-age=60"
-                    | Error e -> (ServerErrors.INTERNAL_ERROR e.Message) ctx
-            }
+        | None -> loadImages (IOAction.tryLoadImage sizedUri) sizedUri.uri ctx
 
     let start () =
         let config = { defaultConfig with
@@ -199,6 +219,7 @@ module WebApi =
         let app =
             choose [
                 path "/info" >=> Successful.OK "Version: 0.2"
+                path "/origin" >=> bindReq (fun r -> r.queryParam "url" => Uri) requestOriginImage BAD_REQUEST
                 path "/cache/fit" >=> bindReq (fun r -> binding {
                     let! width = r.queryParam "width" => int
                     let! height = r.queryParam "height" => int
