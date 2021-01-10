@@ -219,7 +219,7 @@ module WebApi =
         let app =
             choose [
                 path "/info" >=> Successful.OK "Version: 0.2"
-                path "/origin" >=> bindReq (fun r -> r.queryParam "url" => Uri) requestOriginImage BAD_REQUEST
+                path "/cache/origin" >=> bindReq (fun r -> r.queryParam "url" => Uri) requestOriginImage BAD_REQUEST
                 path "/cache/fit" >=> bindReq (fun r -> binding {
                     let! width = r.queryParam "width" => int
                     let! height = r.queryParam "height" => int
