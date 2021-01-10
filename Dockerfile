@@ -1,11 +1,11 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.201-bionic
+FROM mcr.microsoft.com/dotnet/sdk:5.0.101-focal-amd64
 
 WORKDIR /app
 COPY . /app
 
 RUN dotnet publish -c Release -r linux-x64 --self-contained false
 
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1.3-bionic
+FROM mcr.microsoft.com/dotnet/runtime:5.0.1-focal-amd64
 
 # ffmpeg for convert gif to mp4
 RUN apt-get update && apt-get install -y ffmpeg
