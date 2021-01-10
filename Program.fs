@@ -48,7 +48,7 @@ module Encoder =
 
     let private encode input output =
         async {
-            let args = 
+            let args =
                 sprintf "-i \"%s\" -preset medium -vprofile baseline -vcodec libx264 -acodec aac -strict -2 -g 30 -pix_fmt yuv420p -vf \"scale=trunc(in_w/2)*2:trunc(in_h/2)*2\" -f mp4 \"%s\""
                     input output
 
@@ -71,7 +71,7 @@ module Encoder =
             }
             loop ())
 
-module Resizer = 
+module Resizer =
     open System
     open System.IO
     open SkiaSharp
@@ -86,7 +86,7 @@ module Resizer =
         use resultBitmap = new SKBitmap(w, h)
         use canvas = new SKCanvas(resultBitmap)
 
-        let rect = 
+        let rect =
             Domain.fit
                 { width = bitmap.Width; height = bitmap.Height }
                 { width = w; height = h }
@@ -119,8 +119,8 @@ module Resizer =
             loop ())
 
     let private agents = Array.init Environment.ProcessorCount generateAgent
-    
-    let addWork path w h = 
+
+    let addWork path w h =
         let agent = agents.[path.GetHashCode() % agents.Length |> Math.Abs]
         agent.PostAndAsyncReply (fun r -> r, path, w, h)
 
@@ -131,8 +131,8 @@ module SuaveRedirectGenerator =
     open System.Security.Cryptography
 
     let generate (x : SizeUri) =
-        sprintf 
-            "/cache/fit?url=%s&width=%d&height=%d" (Uri.EscapeDataString (x.uri.ToString())) 
+        sprintf
+            "/cache/fit?url=%s&width=%d&height=%d" (Uri.EscapeDataString (x.uri.ToString()))
             x.size.width x.size.height
 
     let calculateMD5Hash (uri : Uri) =
@@ -149,15 +149,15 @@ module IOAction =
     open System.IO
     open Common.Domain
 
-    let tryLoadImage path (r : SizeUri) = 
+    let tryLoadImage path (r : SizeUri) =
         async {
             let! imageFromCache = Resizer.addWork path r.size.width r.size.height
             match imageFromCache with
             | Ok x -> return Ok x
-            | Error _ -> 
+            | Error _ ->
                 return! async {
                     path |> Path.GetDirectoryName |> Directory.CreateDirectory |> ignore
-                    do! Downloader.agent.PostAndAsyncReply (fun rp -> rp, r.uri, path) 
+                    do! Downloader.agent.PostAndAsyncReply (fun rp -> rp, r.uri, path)
                         |> Async.Ignore
                     return! Resizer.addWork path r.size.width r.size.height
                 }
@@ -175,10 +175,10 @@ module WebApi =
     open Common
     open Common.Domain
 
-    let requestImage sizedUri ctx = 
+    let requestImage sizedUri ctx =
         match tryNormalize sizedUri.size with
         | Some x -> Redirection.MOVED_PERMANENTLY (SuaveRedirectGenerator.generate { sizedUri with size = x }) ctx
-        | None -> 
+        | None ->
             async {
                 let! imageResult =
                     Environment.CurrentDirectory + "/cache"
@@ -186,29 +186,29 @@ module WebApi =
                     |> flip IOAction.tryLoadImage sizedUri
                 return!
                     match imageResult with
-                    | Ok image -> 
-                        (Successful.ok image) ctx 
-                        >>= setMimeType "image/jpeg" 
+                    | Ok image ->
+                        (Successful.ok image) ctx
+                        >>= setMimeType "image/jpeg"
                         >>= setHeader "Cache-Control" "public, max-age=60"
                     | Error e -> (ServerErrors.INTERNAL_ERROR e.Message) ctx
             }
 
     let start () =
-        let config = { defaultConfig with 
+        let config = { defaultConfig with
                            bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") 8080us  ] }
         let app =
             choose [
-                path "/info" >=> Successful.OK "Version: 0.1"
+                path "/info" >=> Successful.OK "Version: 0.2"
                 path "/cache/fit" >=> bindReq (fun r -> binding {
                     let! width = r.queryParam "width" => int
                     let! height = r.queryParam "height" => int
                     let! uri = r.queryParam "url" => Uri
                     return { uri = uri; size = { width = width; height = height } }
-                }) requestImage BAD_REQUEST 
+                }) requestImage BAD_REQUEST
             ]
         startWebServer config app
 
 [<EntryPoint>]
-let main _ = 
+let main _ =
     WebApi.start ()
     0

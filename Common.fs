@@ -7,12 +7,12 @@ let (=>) choice f =
     | Choice1Of2 x ->
         try
             Choice1Of2 <| f x
-        with 
+        with
         | e -> Choice2Of2 e.Message
     | Choice2Of2 x -> Choice2Of2 x
 
 module String =
-    let endsWith (postfix: string) (s: string) = s.EndsWith(postfix) 
+    let endsWith (postfix: string) (s: string) = s.EndsWith(postfix)
 
 module Async =
     let asResult f =
@@ -47,13 +47,13 @@ module Domain =
             { left = 0
               top = (target.height - th) / 2
               size = { width = target.width; height = th } }
-        else 
+        else
             let tw = (float src.width) * (float target.height) / (float src.height) |> int
             { left = (target.width - tw) / 2
               top = 0
               size = { width = tw; height = target.height } }
 
-    let tryNormalize x = 
+    let tryNormalize x =
         let normalizeWidth width =
             let n = 1.199
             Math.Log(float <| 1 + width, n)
