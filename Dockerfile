@@ -1,7 +1,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0.101-focal-amd64
 
 WORKDIR /app
+
 COPY *.fsproj /app/
+
+RUN dotnet restore
+
 COPY *.fs /app/
 
 RUN dotnet publish -c Release -r linux-x64 --self-contained false
